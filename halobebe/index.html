@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Human Benchmark</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --val-bg: #0f1923;
+            --val-red: #ff4655;
+            --val-white: #ece8e1;
+            --val-dark-grey: #1f2326;
+            --val-border: rgba(236, 232, 225, 0.2);
+            --font-head: 'Oswald', sans-serif;
+            --font-body: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* General Styles & Background Grid */
+        body {
+            margin: 0;
+            font-family: var(--font-body);
+            background-color: var(--val-bg);
+            color: var(--val-white);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        h1, h2, h3 { 
+            font-family: var(--font-head);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center; 
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        h1 { font-size: 48px; color: var(--val-red); }
+        h2 { font-size: 32px; }
+        p { font-size: 16px; color: #a1a1a1; }
+
+        /* Valorant Style Buttons */
+        button {
+            background-color: var(--val-red);
+            color: var(--val-white);
+            font-family: var(--font-head);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border: none;
+            padding: 15px 40px;
+            font-size: 22px;
+            cursor: pointer;
+            position: relative;
+            clip-path: polygon(0 0, 100% 0, 100% 75%, 90% 100%, 0 100%);
+            transition: background-color 0.3s, transform 0.2s;
+            margin: 10px;
+        }
+
+        button:hover { 
+            background-color: #ff5866; 
+            transform: scale(1.05);
+        }
+
+        /* Admin Reset Button */
+        .admin-btn {
+            background-color: transparent;
+            color: rgba(236, 232, 225, 0.5);
+            border: 1px solid rgba(236, 232, 225, 0.2);
+            font-size: 14px;
+            padding: 10px 20px;
+            margin-top: 40px;
+            clip-path: polygon(0 0, 100% 0, 100% 70%, 90% 100%, 0 100%);
+        }
+
+        .admin-btn:hover {
+            background-color: var(--val-red);
+            color: var(--val-white);
+            border-color: var(--val-red);
+        }
+
+        /* Screen Transitions */
+        @keyframes slideUpFade {
+            0% { opacity: 0; transform: translateY(40px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 1100px; 
+            margin-top: 50px;
+            flex: 1; 
+        }
+
+        .active-screen { 
+            display: flex; 
+            animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .nav-bar {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+
+        .nav-bar button {
+            background-color: transparent;
+            border: 1px solid var(--val-border);
+            clip-path: none;
+            font-size: 16px;
+            padding: 8px 15px;
+        }
+        .nav-bar button:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        /* Home Menu - Glass/Metal Cards */
+        .menu-grid {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        .game-card {
+            background-color: var(--val-dark-grey);
+            border: 1px solid var(--val-border);
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            width: 220px;
+            position: relative;
+            transition: all 0.3s ease;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 90% 100%, 0 100%);
+        }
+
+        .game-card:hover { 
+            transform: translateY(-10px); 
+            background-color: #252a2e;
+            border-color: var(--val-red);
+        }
+
+        .game-card h2 { color: var(--val-red); }
+
+        .target-box {
+            margin-top: 20px;
+            padding: 10px;
+            background: rgba(255, 70, 85, 0.1);
+            border: 1px solid var(--val-red);
+            color: var(--val-red);
+            font-family: var(--font-head);
+            letter-spacing: 1px;
+            font-size: 18px;
+            text-transform: uppercase;
+        }
+
+        .split-layout {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            gap: 50px;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .left-pane { flex: 1; display: flex; justify-content: flex-end; }
+        .right-pane { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; }
+
+        .tutorial-text {
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 4px solid var(--val-red);
+            padding: 20px 25px;
+            max-width: 400px;
+            text-align: left;
+            color: #a1a1a1;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .tutorial-text strong {
+            color: var(--val-white);
+            font-family: var(--font-head);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-size: 20px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        /* Sequence Memory Styles */
+        .sequence-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .seq-square {
+            width: 100px;
+            height: 100px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--val-border);
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .seq-square.flash { 
+            background-color: var(--val-red); 
+            border-color: var(--val-red);
+            box-shadow: 0 0 20px var(--val-red);
+            transform: scale(1.05);
+            z-index: 2;
+        }
+
+        #seq-status {
+            font-family: var(--font-head);
+            font-size: 24px;
+            letter-spacing: 2px;
+            height: 30px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        /* Number Memory Styles */
+        .num-display {
+            font-family: var(--font-head);
+            font-size: 100px;
+            color: var(--val-white);
+            letter-spacing: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+            text-shadow: 0 0 20px rgba(255,255,255,0.2);
+        }
+
+        .num-input {
+            background-color: transparent;
+            color: var(--val-white);
+            border: none;
+            border-bottom: 3px solid var(--val-red);
+            border-radius: 0;
+            font-family: var(--font-head);
+            font-size: 50px;
+            letter-spacing: 5px;
+            padding: 10px;
+            text-align: center;
+            outline: none;
+            width: 300px;
+            transition: border-color 0.3s;
+        }
+
+        .num-input:focus {
+            border-bottom-color: #ff5866;
+            box-shadow: 0 10px 10px -10px var(--val-red);
+        }
+
+        /* Chimp Test Styles */
+        .chimp-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 60px);
+            grid-template-rows: repeat(5, 60px);
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        .chimp-cell {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-head);
+            font-size: 28px;
+            font-weight: bold;
+            user-select: none;
+        }
+
+        .chimp-active {
+            background-color: var(--val-dark-grey);
+            color: var(--val-white);
+            border: 1px solid var(--val-border);
+            cursor: pointer;
+            transition: transform 0.1s, border-color 0.2s;
+        }
+
+        .chimp-active:hover {
+            border-color: var(--val-red);
+            transform: scale(1.1);
+            z-index: 2;
+        }
+
+        .chimp-hidden-text {
+            color: transparent;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-color: transparent;
+        }
+        
+        .chimp-hidden-text:hover {
+            transform: scale(1.1);
+            border-color: var(--val-red);
+        }
+
+        /* Footer Styles */
+        .footer {
+            margin-top: auto; 
+            width: 100%;
+            padding: 40px 0 20px 0;
+            font-family: var(--font-head);
+            color: rgba(236, 232, 225, 0.4); 
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        /* School Logo Styles */
+        .school-logo {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 80px;
+            height: auto;
+            filter: brightness(0) invert(1) opacity(0.6);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .school-logo:hover {
+            filter: brightness(0) invert(1) opacity(1) drop-shadow(0 0 8px rgba(236, 232, 225, 0.5));
+            transform: scale(1.05);
+        }
+
+        /* ==========================================
+           HỆ THỐNG THÔNG BÁO CHUẨN VALORANT STYLE 
+           ========================================== */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 25, 35, 0.85); 
+            backdrop-filter: blur(5px);
+            z-index: 9999;
+            display: none; 
+            align-items: center;
+            justify-content: center;
+        }
+
+        .val-popup {
+            background-color: var(--val-dark-grey);
+            border: 1px solid var(--val-red);
+            padding: 50px 40px;
+            max-width: 500px;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 90% 100%, 0 100%);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+            animation: slideUpFade 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            position: relative;
+        }
+
+        .val-popup::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 6px;
+            height: 100%;
+            background-color: var(--val-red);
+        }
+
+        .popup-title {
+            color: var(--val-red);
+            font-size: 28px;
+            letter-spacing: 4px;
+            margin-bottom: 5px;
+        }
+
+        .popup-subtitle {
+            color: var(--val-white);
+            font-size: 22px;
+            margin-top: 0;
+            margin-bottom: 25px;
+            letter-spacing: 2px;
+        }
+
+        .popup-text {
+            font-family: var(--font-body);
+            font-size: 16px;
+            color: #a1a1a1;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .popup-small {
+            font-size: 13px;
+            color: rgba(236, 232, 225, 0.4);
+            font-style: italic;
+            margin-bottom: 30px;
+            font-family: var(--font-body);
+        }
+    </style>
+</head>
+<body>
+
+    <img src="https://upload.wikimedia.org/wikipedia/vi/thumb/9/90/Logo_of_the_Tr%E1%BA%A7n_%C4%90%E1%BA%A1i_Ngh%C4%A9a_High_School_for_the_Gifted.svg/1200px-Logo_of_the_Tr%E1%BA%A7n_%C4%90%E1%BA%A1i_Ngh%C4%A9a_High_School_for_the_Gifted.svg.png" alt="TDN Logo" class="school-logo">
+
+    <div class="nav-bar">
+        <button id="home-btn" style="display: none;" onclick="showScreen('home')">← TRANG CHỦ</button>
+    </div>
+
+    <div id="home" class="screen active-screen">
+        <h1>Human Benchmark</h1>
+        <p>Vượt qua mốc điểm hiện tại để nhận phần thưởng!</p>
+        <div class="menu-grid">
+            <div class="game-card" onclick="initSequence()">
+                <h2>Trình tự</h2>
+                <p>Ghi nhớ một chuỗi các nút bấm với độ dài tăng dần.</p>
+                <div class="target-box">Mốc thưởng: <span id="hub-target-seq">8</span></div>
+            </div>
+            <div class="game-card" onclick="initNumber()">
+                <h2>Chữ số</h2>
+                <p>Ghi nhớ mã bảo mật dài nhất mà bạn có thể.</p>
+                <div class="target-box">Mốc thưởng: <span id="hub-target-num">12</span></div>
+            </div>
+            <div class="game-card" onclick="initChimp()">
+                <h2>Mục tiêu</h2>
+                <p>Theo dõi và nhấp vào các mục tiêu biến mất theo đúng thứ tự.</p>
+                <div class="target-box">Mốc thưởng: <span id="hub-target-chimp">8</span></div>
+            </div>
+        </div>
+        
+        <button class="admin-btn" onclick="resetAdmin()">[Admin] Khôi phục Mốc Thưởng</button>
+    </div>
+
+    <div id="sequence" class="screen">
+        <h2>Trí nhớ trình tự</h2>
+        <div class="split-layout">
+            <div class="left-pane">
+                <div class="tutorial-text">
+                    <strong>Nhiệm vụ</strong> 
+                    Ghi nhớ chuỗi các ô vuông màu đỏ nhấp nháy. Khi có thông báo "Tới lượt bạn!", hãy lặp lại chính xác trình tự bằng cách nhấp vào các ô đó. Trình tự sẽ tăng thêm một ô sau mỗi vòng.
+                </div>
+            </div>
+            <div class="right-pane">
+                <h3 id="seq-level">Cấp độ: 1</h3>
+                <p id="seq-status"></p>
+                <div class="sequence-grid" id="seq-grid"></div>
+                <button id="seq-start-btn" onclick="startSequenceLevel()">Bắt đầu Giao thức</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="number" class="screen">
+        <h2>Trí nhớ chữ số</h2>
+        <div class="split-layout">
+            <div class="left-pane">
+                <div class="tutorial-text">
+                    <strong>Nhiệm vụ</strong> 
+                    Một mã bảo mật sẽ nháy lên trên màn hình của bạn trong một khoảng thời gian ngắn. Hãy ghi nhớ các chữ số. Khi mã biến mất, hãy nhập lại chính xác để tiếp tục. Mã sẽ dài hơn sau mỗi lần giải mã thành công.
+                </div>
+            </div>
+            <div class="right-pane">
+                <h3 id="num-level-text">Cấp độ: 1</h3>
+                
+                <div id="num-show-area">
+                    <div class="num-display" id="num-display">123</div>
+                    <div id="num-progress-bar" style="height: 5px; background: var(--val-red); width: 100%; transition: linear; box-shadow: 0 0 10px var(--val-red);"></div>
+                </div>
+
+                <div id="num-input-area" style="display: none; text-align: center;">
+                    <p style="font-family: var(--font-head); font-size: 24px; text-transform: uppercase;">Nhập Mã Bảo Mật:</p>
+                    <input type="number" id="num-input" class="num-input" autocomplete="off"><br><br>
+                    <button onclick="submitNumber()">Xác nhận</button>
+                </div>
+                
+                <button id="num-start-btn" onclick="startNumberLevel()">Bắt đầu Giao thức</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="chimp" class="screen">
+        <h2>Theo dõi mục tiêu</h2>
+        <div class="split-layout">
+            <div class="left-pane">
+                <div class="tutorial-text">
+                    <strong>Nhiệm vụ</strong> 
+                    Nhấp vào các mục tiêu được đánh dấu theo thứ tự tăng dần (1, 2, 3...). Ngay khi bạn chọn mục tiêu "1", các mục tiêu còn lại sẽ bị ẩn khỏi giao diện. Dựa vào trí nhớ không gian để dọn dẹp các mục tiêu còn lại theo thứ tự.
+                </div>
+            </div>
+            <div class="right-pane">
+                <h3 id="chimp-score-text">Mục tiêu: 4</h3>
+                <button id="chimp-start-btn" onclick="startChimpLevel()">Bắt đầu Giao thức</button>
+                <div class="chimp-grid" id="chimp-grid"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        Thực hiện bởi Nguyễn Trọng Thiên Ân và Bùi Hữu Nhật Minh 12CTin
+    </div>
+
+    <div id="prize-modal" class="modal-overlay">
+        <div class="val-popup">
+            <h1 class="popup-title">THÔNG BÁO HỆ THỐNG</h1>
+            <h2 class="popup-subtitle">ĐÃ MỞ KHÓA PHẦN THƯỞNG</h2>
+            <p id="popup-text" class="popup-text"></p>
+            <p class="popup-small">Cấu hình độ khó đã được nâng cấp cho đặc vụ tiếp theo.</p>
+            <button onclick="closePrizePopup()">Xác Nhận</button>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // DYNAMIC PRIZE SYSTEM & VALORANT POPUP
+        // ==========================================
+        let targetSeq = parseInt(localStorage.getItem('targetSeq')) || 8;
+        let targetNum = parseInt(localStorage.getItem('targetNum')) || 12;
+        let targetChimp = parseInt(localStorage.getItem('targetChimp')) || 8; 
+
+        let onCloseAction = null; 
+
+        function updateHubTargets() {
+            document.getElementById('hub-target-seq').innerText = targetSeq;
+            document.getElementById('hub-target-num').innerText = targetNum;
+            document.getElementById('hub-target-chimp').innerText = targetChimp;
+        }
+
+        // HÀM RESET DÀNH CHO ADMIN
+        function resetAdmin() {
+            let pass = prompt("HỆ THỐNG BẢO MẬT: Nhập mật khẩu quản trị để khôi phục mốc thưởng:");
+            if (pass === "12CTIN") {
+                targetSeq = 8;
+                targetNum = 12;
+                targetChimp = 8;
+                localStorage.setItem('targetSeq', targetSeq);
+                localStorage.setItem('targetNum', targetNum);
+                localStorage.setItem('targetChimp', targetChimp);
+                updateHubTargets();
+                alert("Xác thực thành công. Toàn bộ mốc thưởng đã được đưa về trạng thái mặc định.");
+            } else if (pass !== null) {
+                alert("Từ chối truy cập. Sai mật khẩu quản trị.");
+            }
+        }
+        
+        function showPrizePopup(message, callback) {
+            document.getElementById('popup-text').innerText = message;
+            document.getElementById('prize-modal').style.display = 'flex';
+            onCloseAction = callback; 
+        }
+
+        function closePrizePopup() {
+            document.getElementById('prize-modal').style.display = 'none';
+            if (onCloseAction) {
+                onCloseAction(); 
+                onCloseAction = null;
+            }
+        }
+
+        updateHubTargets();
+
+        // --- Navigation ---
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => {
+                s.classList.remove('active-screen');
+                void s.offsetWidth; 
+            });
+            document.getElementById(screenId).classList.add('active-screen');
+            document.getElementById('home-btn').style.display = screenId === 'home' ? 'none' : 'block';
+            
+            if(screenId === 'home') {
+                updateHubTargets();
+            }
+        }
+
+        // ==========================================
+        // SEQUENCE MEMORY
+        // ==========================================
+        let seq = [];
+        let seqPlayerIndex = 0;
+        let seqLevel = 1;
+        let seqIsShowing = false;
+
+        function initSequence() {
+            showScreen('sequence');
+            document.getElementById('seq-start-btn').style.display = 'block';
+            document.getElementById('seq-grid').style.display = 'none';
+            document.getElementById('seq-level').innerText = `Cấp độ: 1 (Mốc nhận thưởng: ${targetSeq})`;
+            document.getElementById('seq-status').innerText = "";
+            
+            const grid = document.getElementById('seq-grid');
+            grid.innerHTML = '';
+            for (let i = 0; i < 9; i++) {
+                let square = document.createElement('div');
+                square.className = 'seq-square';
+                square.id = 'seq-' + i;
+                square.onclick = () => handleSeqClick(i);
+                grid.appendChild(square);
+            }
+        }
+
+        function startSequenceLevel() {
+            seq = [];
+            seqLevel = 1;
+            document.getElementById('seq-start-btn').style.display = 'none';
+            document.getElementById('seq-grid').style.display = 'grid';
+            playSequence();
+        }
+
+        async function playSequence() {
+            seqIsShowing = true;
+            seqPlayerIndex = 0;
+            document.getElementById('seq-level').innerText = `Cấp độ: ${seqLevel} (Mốc nhận thưởng: ${targetSeq})`;
+            
+            const statusText = document.getElementById('seq-status');
+            statusText.innerText = "Ghi nhớ...";
+            statusText.style.color = "#ff4655"; 
+            
+            seq.push(Math.floor(Math.random() * 9));
+            
+            await new Promise(r => setTimeout(r, 600));
+
+            for (let i = 0; i < seq.length; i++) {
+                await flashSquare(seq[i]);
+                if (i < seq.length - 1) {
+                    await new Promise(r => setTimeout(r, 250)); 
+                }
+            }
+            
+            seqIsShowing = false;
+            statusText.innerText = "Tới lượt bạn!";
+            statusText.style.color = "#ece8e1"; 
+        }
+
+        function flashSquare(index) {
+            return new Promise(resolve => {
+                const sq = document.getElementById('seq-' + index);
+                sq.classList.add('flash');
+                setTimeout(() => {
+                    sq.classList.remove('flash');
+                    resolve(); 
+                }, 400); 
+            });
+        }
+
+        function handleSeqClick(index) {
+            if (seqIsShowing) return;
+            
+            const sq = document.getElementById('seq-' + index);
+            sq.classList.add('flash');
+            setTimeout(() => sq.classList.remove('flash'), 150);
+
+            if (index === seq[seqPlayerIndex]) { 
+                seqPlayerIndex++;
+                if (seqPlayerIndex === seq.length) {
+                    seqLevel++;
+                    seqIsShowing = true; 
+                    
+                    document.getElementById('seq-status').innerText = "Chính xác!";
+                    document.getElementById('seq-status').style.color = "#8b978f";
+                    
+                    if (seqLevel === targetSeq) {
+                        targetSeq = seqLevel + 1;
+                        localStorage.setItem('targetSeq', targetSeq);
+                        updateHubTargets();
+                        
+                        showPrizePopup(`Bạn đã vượt qua mốc Cấp độ ${seqLevel - 1}. Hiệu suất ghi nhớ đạt chuẩn. Giải thưởng đã được xác nhận.`, () => {
+                            setTimeout(playSequence, 500); 
+                        });
+                    } else {
+                        setTimeout(playSequence, 800);
+                    }
+                }
+            } else {
+                alert(`Giao thức thất bại! Bạn đã dừng lại ở Cấp độ ${seqLevel}.`);
+                initSequence();
+            }
+        }
+
+        // ==========================================
+        // NUMBER MEMORY
+        // ==========================================
+        let numLevel = 1;
+        let currentNumber = "";
+
+        function initNumber() {
+            showScreen('number');
+            document.getElementById('num-start-btn').style.display = 'block';
+            document.getElementById('num-show-area').style.display = 'none';
+            document.getElementById('num-input-area').style.display = 'none';
+            document.getElementById('num-level-text').innerText = `Cấp độ: 1 (Mốc nhận thưởng: ${targetNum})`;
+            numLevel = 1;
+        }
+
+        function startNumberLevel() {
+            document.getElementById('num-start-btn').style.display = 'none';
+            document.getElementById('num-input-area').style.display = 'none';
+            document.getElementById('num-show-area').style.display = 'block';
+            document.getElementById('num-level-text').innerText = `Cấp độ: ${numLevel} (Mốc nhận thưởng: ${targetNum})`;
+            
+            currentNumber = "";
+            for (let i = 0; i < numLevel; i++) {
+                currentNumber += Math.floor(Math.random() * 10).toString();
+            }
+            if (currentNumber[0] === '0') currentNumber = '1' + currentNumber.substring(1);
+            
+            document.getElementById('num-display').innerText = currentNumber;
+
+            let displayTime = 1500 + (numLevel * 500);
+            
+            const bar = document.getElementById('num-progress-bar');
+            bar.style.transition = 'none';
+            bar.style.width = '100%';
+            setTimeout(() => {
+                bar.style.transition = `width ${displayTime}ms linear`;
+                bar.style.width = '0%';
+            }, 50);
+
+            setTimeout(() => {
+                document.getElementById('num-show-area').style.display = 'none';
+                document.getElementById('num-input-area').style.display = 'block';
+                document.getElementById('num-input').value = "";
+                document.getElementById('num-input').focus();
+            }, displayTime);
+        }
+
+        function submitNumber() {
+            const answer = document.getElementById('num-input').value;
+            if (answer === currentNumber) {
+                numLevel++;
+                
+                if (numLevel === targetNum) {
+                    targetNum = numLevel + 1;
+                    localStorage.setItem('targetNum', targetNum);
+                    updateHubTargets();
+                    
+                    showPrizePopup(`Mã bảo mật chính xác. Bạn đã vượt qua mốc Cấp độ ${numLevel - 1}. Giải thưởng đã được xác nhận.`, () => {
+                        startNumberLevel(); 
+                    });
+                } else {
+                    startNumberLevel();
+                }
+            } else {
+                alert(`Giao thức thất bại! \nMã là: ${currentNumber}\nBạn đã nhập: ${answer}\nCấp độ đạt được: ${numLevel}`);
+                initNumber();
+            }
+        }
+
+        document.getElementById('num-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') submitNumber();
+        });
+
+        // ==========================================
+        // CHIMP TEST
+        // ==========================================
+        let chimpLevel = 4;
+        let chimpStep = 1;
+
+        function initChimp() {
+            showScreen('chimp');
+            chimpLevel = 4;
+            document.getElementById('chimp-score-text').innerText = `Mục tiêu hiện tại: ${chimpLevel} (Mốc thưởng: ${targetChimp})`;
+            document.getElementById('chimp-start-btn').style.display = 'block';
+            document.getElementById('chimp-grid').innerHTML = '';
+        }
+
+        function startChimpLevel() {
+            chimpStep = 1;
+            document.getElementById('chimp-start-btn').style.display = 'none';
+            document.getElementById('chimp-score-text').innerText = `Mục tiêu hiện tại: ${chimpLevel} (Mốc thưởng: ${targetChimp})`;
+            
+            const grid = document.getElementById('chimp-grid');
+            grid.innerHTML = '';
+            
+            let slots = Array.from({length: 40}, (_, i) => i);
+            slots.sort(() => Math.random() - 0.5);
+            let activeSlots = slots.slice(0, chimpLevel);
+
+            for (let i = 0; i < 40; i++) {
+                let cell = document.createElement('div');
+                cell.className = 'chimp-cell';
+                
+                let numIndex = activeSlots.indexOf(i);
+                if (numIndex !== -1) {
+                    let number = numIndex + 1;
+                    cell.innerText = number;
+                    cell.dataset.number = number;
+                    cell.classList.add('chimp-active');
+                    cell.onclick = () => handleChimpClick(cell, number);
+                }
+                grid.appendChild(cell);
+            }
+        }
+
+        function handleChimpClick(cell, number) {
+            if (!cell.classList.contains('chimp-active')) return;
+
+            if (number === chimpStep) {
+                cell.classList.remove('chimp-active');
+                cell.innerText = '';
+                cell.style.border = "none";
+                cell.style.backgroundColor = "transparent";
+
+                if (chimpStep === 1) {
+                    document.querySelectorAll('.chimp-active').forEach(c => {
+                        c.classList.add('chimp-hidden-text');
+                    });
+                }
+
+                chimpStep++;
+
+                if (chimpStep > chimpLevel) {
+                    chimpLevel++;
+                    
+                    if (chimpLevel === targetChimp) {
+                        targetChimp = chimpLevel + 1;
+                        localStorage.setItem('targetChimp', targetChimp);
+                        updateHubTargets();
+                        
+                        showPrizePopup(`Triệt hạ thành công ${chimpLevel - 1} mục tiêu ẩn. Bạn đã vượt mốc yêu cầu. Giải thưởng đã được xác nhận.`, () => {
+                            setTimeout(startChimpLevel, 500); 
+                        });
+                    } else {
+                        setTimeout(startChimpLevel, 500);
+                    }
+                }
+            } else {
+                alert(`Giao thức thất bại! Điểm: ${chimpLevel}`);
+                initChimp();
+            }
+        }
+    </script>
+</body>
+</html>
