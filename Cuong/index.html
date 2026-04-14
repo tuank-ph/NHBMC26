@@ -941,7 +941,19 @@ body::before {
 .btn-lb-clear:hover { border-color: var(--red); background: #fff1f2; }
 
 .loading-spin { text-align: center; padding: 30px; color: var(--muted); font-size: 13px; font-weight: 700; }
-
+.how-to-play { background:var(--surface); border:1.5px solid var(--border); border-radius:var(--radius); padding:20px 20px 16px; margin-bottom:22px; box-shadow:var(--shadow-sm); text-align:left; }
+.htp-title { font-size:12px; font-weight:800; color:var(--accent); letter-spacing:2px; text-transform:uppercase; margin-bottom:14px; }
+.htp-steps { display:flex; flex-direction:column; gap:10px; }
+.htp-step { display:flex; align-items:flex-start; gap:12px; }
+.htp-num { width:26px; height:26px; border-radius:50%; flex-shrink:0; background:linear-gradient(135deg,var(--accent),var(--accent2)); color:white; font-size:12px; font-weight:900; display:flex; align-items:center; justify-content:center; margin-top:1px; }
+.htp-text { font-size:13px; font-weight:700; color:var(--text2); line-height:1.5; }
+.htp-text b { color:var(--text); }
+.htp-divider { border:none; border-top:1.5px solid var(--border); margin:14px 0 12px; }
+.htp-legend { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.htp-legend-item { display:flex; align-items:center; gap:8px; background:var(--bg2); border-radius:10px; padding:8px 10px; }
+.htp-legend-icon { font-size:18px; flex-shrink:0; }
+.htp-legend-text { font-size:12px; font-weight:700; color:var(--text2); line-height:1.4; }
+.htp-legend-text b { color:var(--text); display:block; }
 @media (max-width: 400px) {
   .info-cards { grid-template-columns: 1fr; }
   .stats-row  { grid-template-columns: 1fr 1fr; }
@@ -962,131 +974,33 @@ body::before {
   >
 </div>
 
-<!-- TUTORIAL MODAL -->
-<div class="modal-overlay" id="tutorial-modal">
-  <div class="modal-box">
-    <div class="modal-header">
-      <div class="modal-title">📖 Hướng dẫn chơi</div>
-      <button class="btn-modal-close" id="btn-modal-close">✕</button>
-    </div>
-
-    <div class="tut-section">
-      <div class="tut-section-title">Mục tiêu</div>
-      <div class="tut-rule">
-        <div class="tr-icon">🎯</div>
-        <div class="tr-body">
-          <div class="tr-title">Trả lời đúng càng nhiều câu toán càng tốt trong 60 giây!</div>
-          <div class="tr-desc">Gõ đáp án vào ô nhập, rồi nhấn <b>Trả lời</b> hoặc bấm <b>Enter</b>.</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="tut-section">
-      <div class="tut-section-title">Tính điểm</div>
-      <table class="score-table">
-        <tr><td class="sc-label">Trả lời đúng</td><td class="sc-val">+10 điểm</td></tr>
-        <tr><td class="sc-label">Thưởng tốc độ (dưới 1.5 giây)</td><td class="sc-val">+15 điểm</td></tr>
-        <tr><td class="sc-label">Thưởng tốc độ (1.5 – 3 giây)</td><td class="sc-val">+10 điểm</td></tr>
-        <tr><td class="sc-label">Thưởng tốc độ (3 – 5 giây)</td><td class="sc-val">+5 điểm</td></tr>
-        <tr><td class="sc-label">Combo ×2 (3+ liên tiếp đúng)</td><td class="sc-val">×2 điểm</td></tr>
-        <tr><td class="sc-label">Combo ×3 (5+ liên tiếp đúng)</td><td class="sc-val">×3 điểm</td></tr>
-      </table>
-    </div>
-
-    <div class="tut-section">
-      <div class="tut-section-title">Combo 🔥</div>
-      <div class="tut-rule">
-        <div class="tr-icon">🔥</div>
-        <div class="tr-body">
-          <div class="tr-title">Trả lời liên tiếp để tăng hệ số nhân điểm</div>
-          <div class="tr-desc">3 câu đúng liên tiếp → nhân đôi (×2). 5 câu đúng liên tiếp → nhân ba (×3). Trả lời sai là combo về 0!</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="tut-section">
-      <div class="tut-section-title">Độ khó thích ứng 📈</div>
-      <div class="tut-rule">
-        <div class="tr-icon">⬆️</div>
-        <div class="tr-body">
-          <div class="tr-title">Câu hỏi tự động khó hơn sau mỗi câu dễ trả lời đúng</div>
-          <div class="tr-desc">Bắt đầu từ mức <b>Dễ</b>. Mỗi khi trả lời đúng câu <b>Dễ</b> hoặc <b>Trung bình</b>, độ khó tăng ngay 1 bậc. Trả lời sai thì giảm 1 bậc (không xuống dưới mức 1).</div>
-        </div>
-      </div>
-      <table class="diff-table">
-        <tr>
-          <th>Mức</th>
-          <th>Nhãn</th>
-          <th>Ví dụ câu hỏi</th>
-        </tr>
-        <tr>
-          <td>1–2</td>
-          <td><span class="diff-pill-sm de">Dễ</span></td>
-          <td>7 × 8, 42 ÷ 6, 5²</td>
-        </tr>
-        <tr>
-          <td>3–5</td>
-          <td><span class="diff-pill-sm trung">Trung bình</span></td>
-          <td>23 × 7, (4+5)×6, 15% của 80</td>
-        </tr>
-        <tr>
-          <td>6–7</td>
-          <td><span class="diff-pill-sm kho">Khó</span></td>
-          <td>18 × 24, 15², 4³, phương trình</td>
-        </tr>
-      </table>
-    </div>
-
-    <div class="tut-section">
-      <div class="tut-section-title">Xếp hạng</div>
-      <div class="tut-rule">
-        <div class="tr-icon">🏆</div>
-        <div class="tr-body">
-          <div class="tr-title">Sau khi chơi, lưu tên vào bảng xếp hạng</div>
-          <div class="tr-desc">Điểm cao nhất của bạn sẽ được giữ lại. Bảng xếp hạng hiển thị Top 3 trên bục vinh danh và các hạng còn lại bên dưới.</div>
-        </div>
-      </div>
-    </div>
-
-    <button class="btn-start-tut" id="btn-tut-play">🚀 Chơi ngay!</button>
-  </div>
-</div>
-
 <div id="app">
 
   <!-- START -->
   <div id="start-screen" class="screen active">
     <div class="hero-badge">⚡ Thử thách tốc độ</div>
     <div class="hero-title">Toán Tốc Chiến</div>
-    <p class="hero-sub">60 giây. Càng nhanh càng nhiều điểm. Bạn dám không? 🔥</p>
-
-    <div class="info-cards">
-      <div class="info-card">
-        <div class="ic-icon">✅</div>
-        <div class="ic-title">Điểm số</div>
-        <div class="ic-desc">+10 điểm / câu đúng<br>Thưởng tốc độ cực lớn</div>
+    <p class="hero-sub">180 giây. Càng nhanh càng nhiều điểm. Bạn dám không? 🔥</p>
+    <div class="how-to-play">
+      <div class="htp-title">📖 Cách chơi</div>
+      <div class="htp-steps">
+        <div class="htp-step"><div class="htp-num">1</div><div class="htp-text">Đọc câu hỏi, gõ đáp án vào ô nhập rồi nhấn <b>Enter</b> hoặc <b>Trả lời</b></div></div>
+        <div class="htp-step"><div class="htp-num">2</div><div class="htp-text">Mỗi câu đúng được <b>+10 điểm</b>. Trả lời dưới <b>3 giây</b> nhận thêm <b>thưởng tốc độ</b>!</div></div>
+        <div class="htp-step"><div class="htp-num">3</div><div class="htp-text">Câu sai <b>không trừ điểm</b>, nhưng mất combo và câu tiếp theo giảm một bậc độ khó</div></div>
+        <div class="htp-step"><div class="htp-num">4</div><div class="htp-text">Hết <b>180 giây</b> là kết thúc — trả lời nhanh và chính xác nhất có thể!</div></div>
       </div>
-      <div class="info-card">
-        <div class="ic-icon">🔥</div>
-        <div class="ic-title">Combo</div>
-        <div class="ic-desc">3 liên tiếp → ×2<br>5 liên tiếp → ×3</div>
-      </div>
-      <div class="info-card">
-        <div class="ic-icon">📈</div>
-        <div class="ic-title">Độ khó</div>
-        <div class="ic-desc">Tăng ngay mỗi lần<br>trả lời đúng câu dễ!</div>
-      </div>
-      <div class="info-card">
-        <div class="ic-icon">⏱️</div>
-        <div class="ic-title">Thời gian</div>
-        <div class="ic-desc">60 giây tổng<br>Không được dừng!</div>
+      <hr class="htp-divider">
+      <div class="htp-legend">
+        <div class="htp-legend-item"><div class="htp-legend-icon">🔥</div><div class="htp-legend-text"><b>Combo ×2</b>3 câu đúng liên tiếp</div></div>
+        <div class="htp-legend-item"><div class="htp-legend-icon">⚡</div><div class="htp-legend-text"><b>Combo ×3</b>5 câu đúng liên tiếp</div></div>
+        <div class="htp-legend-item"><div class="htp-legend-icon">📈</div><div class="htp-legend-text"><b>Độ khó tăng</b>Đúng câu Dễ / Trung bình</div></div>
+        <div class="htp-legend-item"><div class="htp-legend-icon">🏆</div><div class="htp-legend-text"><b>Bảng xếp hạng</b>Lưu điểm cao nhất</div></div>
       </div>
     </div>
 
     <div class="start-actions">
       <button class="btn-primary" id="btn-start">🚀 Bắt Đầu Chơi!</button>
       <button class="btn-secondary" id="btn-open-lb">🏆 Bảng Xếp Hạng</button>
-      <button class="btn-tut" id="btn-open-tut">📖 Hướng dẫn chơi</button>
     </div>
   </div>
 
@@ -1296,30 +1210,248 @@ const sfx = {
 };
 
 // ── Question generator ────────────────────────────────────────────────────
-const rnd = (a,b)=>Math.floor(Math.random()*(b-a+1))+a;
+// ── Question generator ────────────────────────────────────────────────────
+const rnd = (a,b) => Math.floor(Math.random()*(b-a+1))+a;
 
 const qs = {
-  nhanNho:  ()=>{ const a=rnd(2,9),b=rnd(2,9); return {q:`${a} × ${b} = ?`, ans:a*b, hint:'Nhân', diff:'de'}; },
-  chiaNho:  ()=>{ const b=rnd(2,9),a=rnd(2,9); return {q:`${b*a} ÷ ${b} = ?`, ans:a, hint:'Chia', diff:'de'}; },
-  luongNho: ()=>{ const n=rnd(3,9); return {q:`${n}² = ?`, ans:n*n, hint:'Bình phương', diff:'de'}; },
-  ptDon:    ()=>{ const x=rnd(1,9),a=rnd(2,5),b=rnd(1,9); return {q:`Tìm x: ${a}x + ${b} = ${a*x+b}`, ans:x, hint:'Phương trình', diff:'de'}; },
-  nhanVua:  ()=>{ const a=rnd(11,25),b=rnd(2,9); return {q:`${a} × ${b} = ?`, ans:a*b, hint:'Nhân', diff:'trung'}; },
-  hieuBP:   ()=>{ const n=rnd(5,15); return {q:`${n}² − ${n-1}² = ?`, ans:2*n-1, hint:'Hiệu bình phương', diff:'trung'}; },
-  pt2:      ()=>{ const r1=rnd(1,6),r2=rnd(1,6),b=r1+r2,c=r1*r2; return {q:`x² − ${b}x + ${c} = 0, nghiệm nhỏ nhất?`, ans:Math.min(r1,r2), hint:'Phương trình bậc 2', diff:'trung'}; },
-  phanTram: ()=>{ const p=[10,20,25,50][rnd(0,3)],v=rnd(2,20)*10; return {q:`${p}% của ${v} = ?`, ans:Math.round(v*p/100), hint:'Phần trăm', diff:'trung'}; },
-  thuTu:    ()=>{ const a=rnd(2,9),b=rnd(2,9),c=rnd(2,9); return {q:`(${a} + ${b}) × ${c} = ?`, ans:(a+b)*c, hint:'Thứ tự phép tính', diff:'trung'}; },
-  nhanLon:  ()=>{ const a=rnd(12,25),b=rnd(12,25); return {q:`${a} × ${b} = ?`, ans:a*b, hint:'Nhân lớn', diff:'kho'}; },
-  luongLon: ()=>{ const n=rnd(11,20); return {q:`${n}² = ?`, ans:n*n, hint:'Bình phương', diff:'kho'}; },
-  ptKho:    ()=>{ const x=rnd(2,9),a=rnd(3,7),b=rnd(10,30),c=a*x+b,bs=b>0?`+ ${b}`:`− ${-b}`; return {q:`Tìm x: ${a}x ${bs} = ${c}`, ans:x, hint:'Phương trình', diff:'kho'}; },
-  lapPhuong:()=>{ const n=rnd(2,6); return {q:`${n}³ = ?`, ans:n*n*n, hint:'Lập phương', diff:'kho'}; },
-  hieuBPL:  ()=>{ const n=rnd(20,49); return {q:`${n+1}² − ${n}² = ?`, ans:2*n+1, hint:'Hiệu bình phương', diff:'kho'}; },
+
+  // ══════════════════════════════════════════════════════
+  // DỄ — mức 1–2
+  // ══════════════════════════════════════════════════════
+
+  // √ số hoàn phương (≤ 225)
+  canHoanPhuong: () => {
+    const bases = [1,4,9,16,25,36,49,64,81,100,121,144,169,196,225];
+    const n = bases[rnd(0, bases.length-1)];
+    return { q:`√${n} = ?`, ans: Math.sqrt(n), hint:'Căn bậc hai', diff:'de' };
+  },
+
+  // Tính giá trị hàm y = ax + b tại x cho trước (số nhỏ)
+  hamBacNhatY: () => {
+    const a = rnd(1,4), b = rnd(-5,5), x = rnd(1,5);
+    return { q:`y = ${a}x ${b>=0?'+ '+b:'− '+(-b)}, x = ${x} → y = ?`, ans: a*x+b, hint:'Hàm bậc nhất', diff:'de' };
+  },
+
+  // Tìm x trong PT bậc nhất ax + b = c, nghiệm nguyên dương nhỏ
+  ptBacNhatDon: () => {
+    const x = rnd(1,9), a = rnd(1,5), b = rnd(0,9);
+    return { q:`${a}x + ${b} = ${a*x+b} → x = ?`, ans: x, hint:'PT bậc nhất', diff:'de' };
+  },
+
+  // Pytago bộ số quen: tìm cạnh huyền
+  pytago3_4_5: () => {
+    const triples = [[3,4,5],[5,12,13],[8,15,17],[6,8,10],[9,12,15],[12,16,20]];
+    const [a,b,c] = triples[rnd(0, triples.length-1)];
+    return { q:`Tam giác vuông, hai cạnh góc vuông ${a} và ${b}. Cạnh huyền = ?`, ans: c, hint:'Pytago', diff:'de' };
+  },
+
+  // Pytago: tìm cạnh góc vuông
+  pytago_canhgv: () => {
+    const triples = [[3,4,5],[5,12,13],[8,15,17],[6,8,10],[9,12,15]];
+    const [a,b,c] = triples[rnd(0, triples.length-1)];
+    return { q:`Tam giác vuông, cạnh huyền ${c}, một cạnh ${a}. Cạnh còn lại = ?`, ans: b, hint:'Pytago', diff:'de' };
+  },
+
+  // Rút gọn √(a²) = |a|
+  canBinhPhuong: () => {
+    const n = rnd(2,12);
+    return { q:`√(${n}²) = ?`, ans: n, hint:'Căn bậc hai', diff:'de' };
+  },
+
+  // Tính x² với x nhỏ
+  binhPhuong: () => {
+    const n = rnd(2,12);
+    return { q:`${n}² = ?`, ans: n*n, hint:'Lũy thừa', diff:'de' };
+  },
+
+  // Diện tích hình vuông/chữ nhật
+  dienTich: () => {
+    const a = rnd(2,9), b = rnd(2,9);
+    if(rnd(0,1)===0) return { q:`Hình vuông cạnh ${a}. Diện tích = ?`, ans: a*a, hint:'Hình học', diff:'de' };
+    return { q:`Hình chữ nhật ${a} × ${b}. Diện tích = ?`, ans: a*b, hint:'Hình học', diff:'de' };
+  },
+
+  // ══════════════════════════════════════════════════════
+  // TRUNG BÌNH — mức 3–5
+  // ══════════════════════════════════════════════════════
+
+  // PT bậc hai, nghiệm nguyên dương, hỏi nghiệm nhỏ hoặc lớn
+  ptBacHaiNghiemNho: () => {
+    const r1 = rnd(1,6), r2 = rnd(1,6);
+    const S = r1+r2, P = r1*r2;
+    const bStr = S > 0 ? `− ${S}x` : `+ ${-S}x`;
+    const cStr = P > 0 ? `+ ${P}` : `− ${-P}`;
+    return { q:`x² ${bStr} ${cStr} = 0. Nghiệm nhỏ nhất = ?`, ans: Math.min(r1,r2), hint:'PT bậc hai', diff:'trung' };
+  },
+
+  ptBacHaiNghiemLon: () => {
+    const r1 = rnd(1,6), r2 = rnd(1,6);
+    const S = r1+r2, P = r1*r2;
+    const bStr = S > 0 ? `− ${S}x` : `+ ${-S}x`;
+    const cStr = P > 0 ? `+ ${P}` : `− ${-P}`;
+    return { q:`x² ${bStr} ${cStr} = 0. Nghiệm lớn nhất = ?`, ans: Math.max(r1,r2), hint:'PT bậc hai', diff:'trung' };
+  },
+
+  // Viète: tổng nghiệm = -b/a
+  vieteS: () => {
+    const r1 = rnd(1,7), r2 = rnd(1,7);
+    return { q:`PT x² − ${r1+r2}x + ${r1*r2} = 0. Tổng hai nghiệm = ?`, ans: r1+r2, hint:'Viète', diff:'trung' };
+  },
+
+  // Viète: tích nghiệm = c/a
+  vieteP: () => {
+    const r1 = rnd(1,7), r2 = rnd(1,7);
+    return { q:`PT x² − ${r1+r2}x + ${r1*r2} = 0. Tích hai nghiệm = ?`, ans: r1*r2, hint:'Viète', diff:'trung' };
+  },
+
+  // Hệ PT cộng/trừ thẳng (dễ khử)
+  hePT_congTru: () => {
+    const x = rnd(1,8), y = rnd(1,8);
+    return { q:`x + y = ${x+y}; x − y = ${x-y}. Tìm x = ?`, ans: x, hint:'Hệ PT', diff:'trung' };
+  },
+
+  hePT_tong_y: () => {
+    const x = rnd(1,8), y = rnd(1,8);
+    return { q:`x + y = ${x+y}; x − y = ${x-y}. Tìm y = ?`, ans: y, hint:'Hệ PT', diff:'trung' };
+  },
+
+  // Hệ PT thế (1 PT có hệ số 1)
+  hePT_the: () => {
+    const x = rnd(1,6), y = rnd(1,6);
+    const a = rnd(2,4);
+    const c2 = a*x + y;
+    return { q:`x + y = ${x+y}; ${a}x + y = ${c2}. Tìm x = ?`, ans: x, hint:'Hệ PT (thế)', diff:'trung' };
+  },
+
+  // Trung bình cộng dãy số nguyên nhỏ
+  trungBinh: () => {
+    const n = rnd(3,5);
+    const vals = Array.from({length:n}, () => rnd(1,9));
+    const sum = vals.reduce((a,b)=>a+b,0);
+    if(sum % n !== 0) { vals[0] += n - (sum % n); }
+    const sum2 = vals.reduce((a,b)=>a+b,0);
+    return { q:`TB cộng của {${vals.join(', ')}} = ?`, ans: Math.round(sum2/n), hint:'Thống kê', diff:'trung' };
+  },
+
+  // Rút gọn √(a²·b) hỏi kết quả khi biết a và b
+  rutGonCan: () => {
+    const a = rnd(2,8), b = [2,3,5,6,7][rnd(0,4)];
+    return { q:`√${a*a*b} = ${a}√? → điền số vào dấu ?`, ans: b, hint:'Rút gọn √', diff:'trung' };
+  },
+
+  // Nhân hai căn: √a · √b = √(ab), ab là số chính phương
+  nhanCan: () => {
+    const pairs = [[2,8,4],[3,12,6],[4,9,6],[5,20,10],[2,18,6],[3,27,9],[4,25,10]];
+    const [a,b,c] = pairs[rnd(0,pairs.length-1)];
+    return { q:`√${a} × √${b} = ?`, ans: c, hint:'Nhân căn', diff:'trung' };
+  },
+
+  // Hàm bậc nhất: tìm b khi biết đồ thị qua điểm (x, y) và hệ số a
+  hamBacNhatTimB: () => {
+    const a = rnd(1,4), b = rnd(-5,5), x = rnd(1,5);
+    const y = a*x+b;
+    return { q:`y = ${a}x + b, đồ thị qua (${x}, ${y}). Tìm b = ?`, ans: b, hint:'Hàm bậc nhất', diff:'trung' };
+  },
+
+  // Median (trung vị) dãy số lẻ phần tử, đã sắp xếp sẵn
+  trungVi: () => {
+    const n = rnd(3,5)*2-1; // 3,5,7
+    const sorted = Array.from({length:n}, (_,i) => rnd(1,5)+i*rnd(1,3));
+    return { q:`Trung vị của {${sorted.join(', ')}} = ?`, ans: sorted[Math.floor(n/2)], hint:'Thống kê', diff:'trung' };
+  },
+
+  // ══════════════════════════════════════════════════════
+  // KHÓ — mức 6–7
+  // ══════════════════════════════════════════════════════
+
+  // PT bậc hai: tìm nghiệm khi biết tổng và tích (Viète ngược)
+  vieteNguoc: () => {
+    const S = rnd(4,12), P = rnd(3,20);
+    // kiểm tra delta >= 0 và nghiệm nguyên
+    const delta = S*S - 4*P;
+    if(delta < 0 || !Number.isInteger(Math.sqrt(delta))) return qs.ptBacHaiNghiemLon();
+    const sq = Math.sqrt(delta);
+    const r1 = (S+sq)/2, r2 = (S-sq)/2;
+    if(!Number.isInteger(r1) || r1<=0 || r2<=0) return qs.ptBacHaiNghiemLon();
+    return { q:`PT bậc hai có tổng nghiệm ${S} và tích nghiệm ${P}. Nghiệm lớn = ?`, ans: Math.max(r1,r2), hint:'Viète nâng cao', diff:'kho' };
+  },
+
+  // Hoành độ đỉnh parabol y = x² + bx + c → x_đỉnh = -b/2
+  dinhParabol: () => {
+    const h = rnd(-4,4);
+    const b = -2*h;
+    const c = rnd(-5,5);
+    const bStr = b > 0 ? `+ ${b}x` : b < 0 ? `− ${-b}x` : '';
+    const cStr = c >= 0 ? `+ ${c}` : `− ${-c}`;
+    return { q:`y = x² ${bStr} ${cStr}. Hoành độ đỉnh = ?`, ans: h, hint:'Parabol', diff:'kho' };
+  },
+
+  // Tung độ đỉnh parabol y = x² + bx + c → y_đỉnh = c - b²/4
+  dinhParabolY: () => {
+    const h = rnd(-3,3);
+    const k = rnd(-4,4);
+    // y = (x-h)² + k
+    const b = -2*h, c = h*h+k;
+    const bStr = b > 0 ? `+ ${b}x` : b < 0 ? `− ${-b}x` : '';
+    const cStr = c >= 0 ? `+ ${c}` : `− ${-c}`;
+    return { q:`y = x² ${bStr} ${cStr}. Tung độ đỉnh = ?`, ans: k, hint:'Parabol', diff:'kho' };
+  },
+
+  // Hệ PT khó hơn: 2x + y và x + 2y
+  hePTkho: () => {
+    const x = rnd(1,6), y = rnd(1,6);
+    return { q:`2x + y = ${2*x+y}; x + 2y = ${x+2*y}. Tìm x = ?`, ans: x, hint:'Hệ PT (khó)', diff:'kho' };
+  },
+
+  hePTkhoY: () => {
+    const x = rnd(1,6), y = rnd(1,6);
+    return { q:`2x + y = ${2*x+y}; x + 2y = ${x+2*y}. Tìm y = ?`, ans: y, hint:'Hệ PT (khó)', diff:'kho' };
+  },
+
+  // Delta của PT bậc hai ax²+bx+c: Δ = b²-4ac
+  tinhDelta: () => {
+    // chọn b, a, c sao cho delta là số đẹp
+    const r1=rnd(1,5), r2=rnd(1,5);
+    const b=-(r1+r2), c=r1*r2, a=1;
+    const delta = b*b - 4*a*c;
+    return { q:`PT x² ${b<0?b+'x':'+'+b+'x'} + ${c} = 0. Δ = b²−4ac = ?`, ans: delta, hint:'Biệt thức Δ', diff:'kho' };
+  },
+
+  // √Δ khi Δ là số chính phương
+  canDelta: () => {
+    const sq = rnd(1,8);
+    const delta = sq*sq;
+    return { q:`Δ = ${delta}. √Δ = ?`, ans: sq, hint:'Căn biệt thức', diff:'kho' };
+  },
+
+  // Xác suất: P = k/n, tìm số trường hợp thuận lợi
+  xacSuat: () => {
+    const n = [4,5,6,8,10,12][rnd(0,5)];
+    const k = rnd(1,n-1);
+    const gcd = (a,b) => b===0?a:gcd(b,a%b);
+    const g = gcd(k,n);
+    return { q:`Có ${n} phần tử. P(A) = ${k/g}/${n/g}. Số phần tử thuận lợi = ?`, ans: k, hint:'Xác suất', diff:'kho' };
+  },
+
+  // Hàm bậc hai: tính y tại x cho trước (x nhỏ, a nhỏ)
+  hamBacHaiGiaTriY: () => {
+    const a = [1,-1,2,-2][rnd(0,3)];
+    const h = rnd(-2,2), k = rnd(-4,4);
+    const x = h + rnd(-2,2);
+    const y = a*(x-h)*(x-h)+k;
+    const b = -2*a*h, c = a*h*h+k;
+    const aStr = a===1?'' : a===-1?'−' : `${a}`;
+    const bStr = b>0?`+ ${b}x`: b<0?`− ${-b}x`:'';
+    const cStr = c>0?`+ ${c}`: c<0?`− ${-c}`:'';
+    return { q:`y = ${aStr}x² ${bStr} ${cStr}, x = ${x} → y = ?`, ans: y, hint:'Hàm bậc hai', diff:'kho' };
+  },
+
 };
 
-// Level → tier mapping: 1–2 = dễ, 3–5 = trung, 6–7 = khó
 const banks = {
-  de:    ['nhanNho','chiaNho','luongNho','ptDon'],
-  trung: ['nhanVua','hieuBP','phanTram','ptDon','luongNho','thuTu'],
-  kho:   ['nhanLon','luongLon','ptKho','lapPhuong','hieuBPL','thuTu','pt2'],
+  de:    ['canHoanPhuong','hamBacNhatY','ptBacNhatDon','pytago3_4_5','pytago_canhgv','canBinhPhuong','binhPhuong','dienTich'],
+  trung: ['ptBacHaiNghiemNho','ptBacHaiNghiemLon','vieteS','vieteP','hePT_congTru','hePT_tong_y','hePT_the','trungBinh','rutGonCan','nhanCan','hamBacNhatTimB','trungVi'],
+  kho:   ['vieteNguoc','dinhParabol','dinhParabolY','hePTkho','hePTkhoY','tinhDelta','canDelta','xacSuat','hamBacHaiGiaTriY'],
 };
 
 function tierOf(level){
@@ -1355,7 +1487,7 @@ let state={};
 let timer=null, sessionBest=0, qStart=0, lastRun={}, scoreSaved=false, lastSavedName='';
 
 function resetState(){
-  state={score:0,combo:0,mult:1,level:1,timeLeft:60,
+  state={score:0,combo:0,mult:1,level:1,timeLeft:180,
          answered:0,correct:0,totalTime:0,running:false,q:null};
 }
 
@@ -1394,7 +1526,7 @@ function updateHUD(){
   $('tb-combo').textContent = `×${state.mult}`;
   $('tb-timer').classList.toggle('urgent', state.timeLeft<=10);
   $('prog-bar').classList.toggle('urgent', state.timeLeft<=10);
-  $('prog-bar').style.width = (state.timeLeft/60*100)+'%';
+  $('prog-bar').style.width = (state.timeLeft/180*100)+'%';
   const ct=$('combo-tile');
   ct.className='combo-tile';
   if(state.mult===3) ct.classList.add('x3');
@@ -1623,24 +1755,6 @@ async function renderLB(highlightName){
     rowsEl.appendChild(row);
   });
 }
-
-// ── Tutorial modal ────────────────────────────────────────────────────────
-function openTutorial(){
-  $('tutorial-modal').classList.add('open');
-  document.body.style.overflow='hidden';
-}
-function closeTutorial(){
-  $('tutorial-modal').classList.remove('open');
-  document.body.style.overflow='';
-}
-
-$('btn-open-tut').addEventListener('click', openTutorial);
-$('btn-modal-close').addEventListener('click', closeTutorial);
-$('tutorial-modal').addEventListener('click', e=>{
-  if(e.target===$('tutorial-modal')) closeTutorial();
-});
-$('btn-tut-play').addEventListener('click',()=>{ closeTutorial(); startGame(); });
-
 // ── Events ────────────────────────────────────────────────────────────────
 $('btn-start').addEventListener('click',startGame);
 $('btn-retry').addEventListener('click',startGame);
