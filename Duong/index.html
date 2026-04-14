@@ -4,23 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nông Trại Toán Học 9 - TĐN</title>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     
-    <aside class="motto-side motto-container-left">
-        <div class="motto-group">
-            <p>Học để biết</p>
-            <p>Học để làm</p>
-        </div>
-        <div class="motto-group" style="margin-top: 40px; border-top: 1px solid #ddd; padding-top: 20px;">
-            <p>Học để khẳng định mình</p>
-            <p>Học để cùng chung sống</p>
-        </div>
-    </aside>
-
     <div class="container">
         <header class="header-banner">
             <img src="https://upload.wikimedia.org/wikipedia/commons/f/fd/Logo_of_the_Tr%E1%BA%A7n_%C4%90%E1%BA%A1i_Ngh%C4%A9a_High_School_for_the_Gifted.svg" alt="Logo Trần Đại Nghĩa" class="school-logo">
@@ -32,26 +20,32 @@
 
         <div id="story-intro" class="box intro-card">
             <h3>👨‍🌾 Lời kêu cứu!</h3>
-            <p style="text-align: left; line-height: 1.5;">"Chào con, bác đang gặp rắc rối lớn! Đàn gà và vịt của bác đã đến tuổi xuất chuồng. Con hãy giúp bác phân loại và thu hoạch nhé!"</p>
+            <p style="text-align: left; line-height: 1.5;">"Chào con, bác nông dân đang rất đau đầu không biết đàn gia súc của mình có bao nhiêu con gà, bao nhiêu con vịt. Cháu hãy giúp bác phân loại, sau đó tính toán làm sao có thể chọn được những con tốt nhất để đi mổ nhé!"</p>
             <button class="primary-btn btn-lg" onclick="startGame()">Cháu giúp ngay! 🚛</button>
         </div>
 
         <div id="phase1" class="hidden phase-container">
-            <h2 class="phase-header">📍 Giai đoạn 1: Phân Chia</h2>
+            <h2 class="phase-header">📍 Vòng 1: Giải Cứu Nông Trại</h2>
             <div class="box math-section">
                 <p id="problem-desc" class="problem-text">Đang tính toán...</p>
                 <div class="input-group">
-                    <div class="input-field"><span>🐔 Gà</span><input type="number" id="inputX"></div>
-                    <div class="input-field"><span>🦆 Vịt</span><input type="number" id="inputY"></div>
+                    <div class="input-field"><span>🐔 Số Gà</span><input type="number" id="inputX"></div>
+                    <div class="input-field"><span>🦆 Số Vịt</span><input type="number" id="inputY"></div>
                 </div>
-                <button class="primary-btn btn-lg" onclick="checkPhase1()">🚀 Xác nhận số lượng</button>
+                <button class="primary-btn btn-lg" onclick="checkPhase1()">🚀 Chốt đáp án!</button>
                 <p id="p1-feedback"></p>
             </div>
         </div>
 
+        <div id="phase1-gameover" class="hidden phase-container box" style="border: 2px solid #c0392b;">
+            <h2 style="color: #c0392b; margin-top: 0;">❌ BẠN ĐÃ TÍNH SAI!</h2>
+            <p style="font-size: 16px;">Rất tiếc, bạn đã tính sai quá số lần quy định. Xe tải đã rời đi mà bầy gia súc vẫn chưa được phân loại xong!</p>
+            <button class="primary-btn btn-lg" style="background: #c0392b;" onclick="restartGame()">🔄 Chơi lại từ đầu</button>
+        </div>
+
         <div id="phase2" class="hidden phase-container">
-            <h2 class="phase-header">📍 Giai đoạn 2: Thu Hoạch</h2>
-            <div id="game-log" class="log-message box">Hãy chọn đàn có tỷ lệ tốt nhất!</div>
+            <h2 class="phase-header">📍 Vòng 2: Tuyển Chọn Gắt Gao</h2>
+            <div id="game-log" class="log-message box">Nhìn kỹ tỷ lệ và mổ ngay nào! 🔪</div>
             <div class="stats-container">
                 <div class="stat-box chicken">
                     <strong>Đàn Gà 🐔</strong>
@@ -62,37 +56,48 @@
                     <span id="vit_stat" class="value"></span>
                 </div>
             </div>
-            <p class="clicks-remainHighlight">⏳ Lượt mổ còn lại: <span id="clicks"></span></p>
+            <p class="clicks-remainHighlight">⏳ Số lần mổ còn lại: <span id="clicks"></span></p>
             <div id="action-buttons">
                 <button class="btn-ga action-btn" onclick="slaughter('ga')">🪓 Mổ Gà</button>
                 <button class="btn-vit action-btn" onclick="slaughter('vit')">🪓 Mổ Vịt</button>
             </div>
             <div id="final-stats" class="final-card hidden">
-                <h3>📊 BÁO CÁO</h3>
-                <p>💎 Điểm: <span id="final-score"></span></p>
+                <h3>📊 BÁO CÁO KẾT QUẢ</h3>
+                <p>💎 Điểm chất lượng: <span id="final-score"></span></p>
                 <p style="color: #d35400; font-weight: bold;">🏆 Kỷ lục: <span id="high-score">0</span></p>
                 <p id="rank-text"></p>
-                <button class="primary-btn" onclick="restartGame()">🔄 CHƠI LẠI</button>
+                <button class="primary-btn" onclick="restartGame()">🔄 CHƠI LẠI VÁN MỚI</button>
             </div>
         </div>
     </div>
 
     <aside class="sidebar-help">
-        <div class="sidebar-content box">
-            <h3>📜 Hướng Dẫn</h3>
-            <div class="step-desc">
-                <p><b>📍 Giai đoạn 1:</b> Bạn cần giải hệ phương trình để tìm ra số lượng chính xác của từng loại đàn:</p>
-                <div class="latex-box">
-                    \[\begin{cases} x + y = \sum \text{con} \\ ax + by = \sum \text{kg} \end{cases}\]
-                </div>
+    <div class="sidebar-content box">
+        <h3>📜 Hướng Dẫn Chơi</h3>
+        <div class="step-desc">
+            <p><b>📍 Vòng 1: Giải hệ</b></p>
+            <p>Đọc kỹ đề bài của bác nông dân. Hãy lập <b>hệ phương trình bậc nhất hai ẩn</b> để tìm ra số Gà (\(x\)) và số Vịt (\(y\)):</p>
+            <div class="latex-box">
+                \[
+                \begin{cases} 
+                x + y = \text{Tổng số con} \\ 
+                a \cdot x + b \cdot y = \text{Tổng cân nặng} 
+                \end{cases}
+                \]
             </div>
-            <div class="step-desc" style="margin-top: 15px;">
-                <p><b>📍 Giai đoạn 2:</b> Bạn có số lượt mổ giới hạn. Hãy quan sát tỉ lệ hiển thị (ví dụ 5/15) và chọn đàn có xác suất trúng <b>con ngon</b> cao hơn:</p>
-                <p style="text-align: center; font-style: italic;">P = \(\frac{\text{Con chất lượng}}{\text{Tổng số con}}\)</p>
-            </div>
+            <p style="color: #c0392b; font-weight: bold; margin-top: 10px;">⚠️ Lưu ý: Bạn chỉ được phép tính sai 1 lần duy nhất.</p>
         </div>
+        
+        <div class="step-desc" style="margin-top: 15px; border-top: 1px dashed #ccc; padding-top: 15px;">
+            <p><b>📍 Vòng 2: Xác suất</b></p>
+            <p>Bạn sẽ được cấp một số lượt mổ giới hạn. Hãy quan sát con số trên màn hình (Ví dụ: \(8/10\) tức là có \(8\) con ngon trong tổng số \(10\) con).</p>
+            <div class="latex-box">
+                \[ P = \frac{\text{Số con ngon}}{\text{Tổng số con trong đàn}} \]
+            </div>
+            <p>Mỗi đàn có tổng số con và số con ngon <b>khác nhau</b>, hãy chọn hợp lý để dễ dàng nhận được điểm Kim Cương (💎).
+        </div>
+    </div>
     </aside>
-
     <script src="game.js"></script>
 </body>
 </html>
