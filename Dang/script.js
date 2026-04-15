@@ -1,12 +1,12 @@
 const SVG_NS = "http://www.w3.org/2000/svg";
-const GAME_DURATION_SECONDS = 120;
+const GAME_DURATION_SECONDS = 67;
 const FEVER_DURATION_MS = 15000;
 const COMBO_WINDOW_MS = 20000;
-const STAGE_INTRO_DURATION_MS = 2000;
+const STAGE_INTRO_DURATION_MS = 1500;
 const TUTORIAL_IDLE_DELAY_MS = 100;
 const TUTORIAL_HINT_RESTART_MS = 1700;
 const TUTORIAL_EXIT_FLASH_MS = 800;
-const TUTORIAL_STAGE_BANNER_DURATION_MS = 2300;
+const TUTORIAL_STAGE_BANNER_DURATION_MS = 1500;
 const CORRECT_SCORE = 100;
 const WRONG_SCORE = 50;
 const MASTER_VOLUME = 3.0;
@@ -26,7 +26,7 @@ const PLOT_HEIGHT = PLOT_BOTTOM - PLOT_TOP;
 const STAGE_META = {
   1: {
     title: "Giai đoạn 1",
-    name: "Làm quen với độ dốc",
+    name: "Làm quen với hệ số góc",
     description: "Chọn hệ số a để đường thẳng y = ax đi qua đúng điểm mục tiêu."
   },
   2: {
@@ -55,7 +55,7 @@ const TUTORIAL_STAGE_DATA = {
         sourceValue: 2,
         slot: "a",
         value: 2,
-        message: "Kéo số 2 từ kho số vào ô a để đổi độ dốc của đường thẳng."
+        message: "Kéo số 2 từ kho số vào ô a để đổi hệ số góc của đường thẳng."
       }
     ]
   },
@@ -77,7 +77,7 @@ const TUTORIAL_STAGE_DATA = {
         sourceValue: 1,
         slot: "a",
         value: 1,
-        message: "Bước 1: Kéo số 1 vào ô a để tạo độ dốc của đường thẳng."
+        message: "Bước 1: Kéo số 1 vào ô a để tạo hệ số góc của đường thẳng."
       },
       {
         sourceValue: 2,
@@ -846,8 +846,6 @@ function bindEvents() {
   document.addEventListener("pointerup", onPointerUp);
   document.addEventListener("pointercancel", cancelDrag);
   window.addEventListener("blur", cancelDrag);
-  window.addEventListener("resize", requestGraphFrameSync);
-  document.addEventListener("fullscreenchange", requestGraphFrameSync);
 }
 
 function toggleTutorialMode() {
@@ -1058,28 +1056,11 @@ function requestGraphFrameSync() {
 }
 
 function syncGraphFrameHeight() {
-  if (!refs.graphPanel || !refs.graphFrame || !refs.graphHeader || !refs.homeBtn) {
+  if (!refs.graphPanel || !refs.graphFrame) {
     return;
   }
-
-  if (window.innerWidth <= 920) {
-    refs.graphFrame.style.height = "";
-    return;
-  }
-
-  const panelRect = refs.graphPanel.getBoundingClientRect();
-  const frameRect = refs.graphFrame.getBoundingClientRect();
-  const buttonRect = refs.homeBtn.getBoundingClientRect();
-  const panelStyles = window.getComputedStyle(refs.graphPanel);
-  const paddingBottom = Number.parseFloat(panelStyles.paddingBottom) || 0;
-  const frameOffsetTop = frameRect.top - panelRect.top;
-  const desiredHeight = Math.round(buttonRect.bottom - panelRect.top - frameOffsetTop - paddingBottom);
-
-  if (desiredHeight > 280) {
-    refs.graphFrame.style.height = `${desiredHeight}px`;
-  } else {
-    refs.graphFrame.style.height = "";
-  }
+  refs.graphPanel.style.height = "";
+  refs.graphFrame.style.height = "";
 }
 
 function hideScreenFlash() {
@@ -2079,8 +2060,8 @@ function endGame(clearedAll) {
 
   refs.endTitle.textContent = clearedAll ? "HOÀN THÀNH" : "HẾT GIỜ";
   const baseSummary = clearedAll
-    ? "Bạn đã chinh phục đủ cả 3 giai đoạn trước khi đồng hồ chạm 0. Có thể bấm chơi lại để đạt điểm cao hơn."
-    : "Thời gian đã hết. Bấm chơi lại, thử tối ưu combo và về đích nhanh hơn.";
+    ? "Bạn đã chinh phục đủ cả 3 giai đoạn trước khi hết thời gian. Có thể nhấn chơi lại để đạt điểm cao hơn."
+    : "Thời gian đã hết. Nhấn chơi lại, thử tối ưu combo và về đích nhanh hơn.";
   refs.endSummary.innerHTML = `${baseSummary} ${buildLeaderboardSummary(leaderboardResult)}`.trim();
   refs.finalScore.textContent = String(state.score);
   refs.finalSolved.textContent = `${state.solvedCount} / ${LEVEL_COUNT}`;
@@ -2694,18 +2675,18 @@ function handleSolved() {
   const earned = feverScoring ? CORRECT_SCORE * 2 : CORRECT_SCORE;
   const shouldShowFeverInfo = triggeredFever && !state.feverInfoShown;
 
-  applyScoreChange(earned, feverScoring ? `FEVER: +${earned} Ä‘iá»ƒm` : `ChÃ­nh xÃ¡c: +${earned} Ä‘iá»ƒm`, feverScoring ? "fever" : "gain");
+  applyScoreChange(earned, feverScoring ? `FEVER: +${earned} điểm` : `Chính xác: +${earned} điểm`, feverScoring ? "fever" : "gain");
   state.solvedCount += 1;
   refs.curvePath.classList.remove("curve-solved");
   void refs.curvePath.getBoundingClientRect();
   refs.curvePath.classList.add("curve-solved");
 
   if (triggeredFever) {
-    setStatus(`FEVER kÃ­ch hoáº¡t! +${earned} Ä‘iá»ƒm.`, "fever");
+    setStatus(`FEVER kích hoạt! +${earned} điểm.`, "fever");
   } else if (feverScoring) {
-    setStatus(`FEVER!! +${earned} Ä‘iá»ƒm.`, "fever");
+    setStatus(`FEVER!! +${earned} điểm.`, "fever");
   } else {
-    setStatus(`ChÃ­nh xÃ¡c! +${earned} Ä‘iá»ƒm.`, "success");
+    setStatus(`Chính xác! +${earned} điểm.`, "success");
   }
 
   updateHud(getRemainingTimeMs());
