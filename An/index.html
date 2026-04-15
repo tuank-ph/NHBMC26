@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,7 +30,6 @@
             overflow-x: hidden;
         }
 
-        /* Techy Grid Background Pattern */
         body::before {
             content: '';
             position: fixed;
@@ -68,7 +67,6 @@
             font-size: 22px;
             cursor: pointer;
             position: relative;
-            /* Cut off the bottom right corner */
             clip-path: polygon(0 0, 100% 0, 100% 75%, 90% 100%, 0 100%);
             transition: background-color 0.3s, transform 0.2s;
             margin: 10px;
@@ -77,6 +75,23 @@
         button:hover { 
             background-color: #ff5866; 
             transform: scale(1.05);
+        }
+
+        /* Admin Reset Button */
+        .admin-btn {
+            background-color: transparent;
+            color: rgba(236, 232, 225, 0.5);
+            border: 1px solid rgba(236, 232, 225, 0.2);
+            font-size: 14px;
+            padding: 10px 20px;
+            margin-top: 40px;
+            clip-path: polygon(0 0, 100% 0, 100% 70%, 90% 100%, 0 100%);
+        }
+
+        .admin-btn:hover {
+            background-color: var(--val-red);
+            color: var(--val-white);
+            border-color: var(--val-red);
         }
 
         /* Screen Transitions */
@@ -91,9 +106,9 @@
             align-items: center;
             justify-content: center;
             width: 100%;
-            max-width: 1100px; /* Widened to fit side-by-side layout */
+            max-width: 1100px; 
             margin-top: 50px;
-            flex: 1; /* Allows screens to take up available vertical space */
+            flex: 1; 
         }
 
         .active-screen { 
@@ -136,7 +151,6 @@
             width: 220px;
             position: relative;
             transition: all 0.3s ease;
-            /* Angled corner shape */
             clip-path: polygon(0 0, 100% 0, 100% 90%, 90% 100%, 0 100%);
         }
 
@@ -148,7 +162,18 @@
 
         .game-card h2 { color: var(--val-red); }
 
-        /* Split Layout for Games */
+        .target-box {
+            margin-top: 20px;
+            padding: 10px;
+            background: rgba(255, 70, 85, 0.1);
+            border: 1px solid var(--val-red);
+            color: var(--val-red);
+            font-family: var(--font-head);
+            letter-spacing: 1px;
+            font-size: 18px;
+            text-transform: uppercase;
+        }
+
         .split-layout {
             display: flex;
             flex-direction: row;
@@ -159,22 +184,9 @@
             margin-top: 20px;
         }
 
-        .left-pane {
-            flex: 1;
-            display: flex;
-            justify-content: flex-end;
-        }
+        .left-pane { flex: 1; display: flex; justify-content: flex-end; }
+        .right-pane { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; }
 
-        .right-pane {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 400px;
-        }
-
-        /* Tutorial Box Styles */
         .tutorial-text {
             background: rgba(255, 255, 255, 0.03);
             border-left: 4px solid var(--val-red);
@@ -213,7 +225,6 @@
             transition: all 0.15s ease;
         }
 
-        /* Neon Glow Flash */
         .seq-square.flash { 
             background-color: var(--val-red); 
             border-color: var(--val-red);
@@ -311,23 +322,18 @@
 
         /* Footer Styles */
         .footer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
+            margin-top: auto; 
             width: 100%;
-            padding: 15px 0;
+            padding: 40px 0 20px 0;
             font-family: var(--font-head);
-            color: rgba(236, 232, 225, 0.4); /* Faded Valorant White */
+            color: rgba(236, 232, 225, 0.4); 
             font-size: 14px;
             letter-spacing: 2px;
             text-transform: uppercase;
             text-align: center;
-            background: linear-gradient(to top, var(--val-bg) 60%, transparent);
-            z-index: 100;
-            pointer-events: none; /* Lets you click things behind it */
         }
 
-        /* Added School Logo Styles */
+        /* School Logo Styles */
         .school-logo {
             position: absolute;
             top: 20px;
@@ -343,64 +349,135 @@
             filter: brightness(0) invert(1) opacity(1) drop-shadow(0 0 8px rgba(236, 232, 225, 0.5));
             transform: scale(1.05);
         }
+
+        /* ==========================================
+           HỆ THỐNG THÔNG BÁO CHUẨN VALORANT STYLE 
+           ========================================== */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 25, 35, 0.85); 
+            backdrop-filter: blur(5px);
+            z-index: 9999;
+            display: none; 
+            align-items: center;
+            justify-content: center;
+        }
+
+        .val-popup {
+            background-color: var(--val-dark-grey);
+            border: 1px solid var(--val-red);
+            padding: 50px 40px;
+            max-width: 500px;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 90% 100%, 0 100%);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+            animation: slideUpFade 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            position: relative;
+        }
+
+        .val-popup::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 6px;
+            height: 100%;
+            background-color: var(--val-red);
+        }
+
+        .popup-title {
+            color: var(--val-red);
+            font-size: 28px;
+            letter-spacing: 4px;
+            margin-bottom: 5px;
+        }
+
+        .popup-subtitle {
+            color: var(--val-white);
+            font-size: 22px;
+            margin-top: 0;
+            margin-bottom: 25px;
+            letter-spacing: 2px;
+        }
+
+        .popup-text {
+            font-family: var(--font-body);
+            font-size: 16px;
+            color: #a1a1a1;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .popup-small {
+            font-size: 13px;
+            color: rgba(236, 232, 225, 0.4);
+            font-style: italic;
+            margin-bottom: 30px;
+            font-family: var(--font-body);
+        }
     </style>
 </head>
 <body>
 
-    <img src="Logo_of_the_Trần_Đại_Nghĩa_High_School_for_the_Gifted.svg.png" alt="TDN Logo" class="school-logo">
+    <img src="https://upload.wikimedia.org/wikipedia/vi/thumb/9/90/Logo_of_the_Tr%E1%BA%A7n_%C4%90%E1%BA%A1i_Ngh%C4%A9a_High_School_for_the_Gifted.svg/1200px-Logo_of_the_Tr%E1%BA%A7n_%C4%90%E1%BA%A1i_Ngh%C4%A9a_High_School_for_the_Gifted.svg.png" alt="TDN Logo" class="school-logo">
 
     <div class="nav-bar">
-        <button id="home-btn" style="display: none;" onclick="showScreen('home')">← HUB</button>
+        <button id="home-btn" style="display: none;" onclick="showScreen('home')">← TRANG CHỦ</button>
     </div>
 
     <div id="home" class="screen active-screen">
         <h1>Human Benchmark</h1>
-        <p>Select a test to measure your agent abilities.</p>
+        <p>Vượt qua mốc điểm hiện tại để nhận phần thưởng!</p>
         <div class="menu-grid">
             <div class="game-card" onclick="initSequence()">
-                <h2>Sequence</h2>
-                <p>Remember an increasingly long pattern of terminal presses.</p>
+                <h2>Trình tự</h2>
+                <p>Ghi nhớ một chuỗi các nút bấm với độ dài tăng dần.</p>
+                <div class="target-box">Mốc thưởng: <span id="hub-target-seq">8</span></div>
             </div>
             <div class="game-card" onclick="initNumber()">
-                <h2>Numbers</h2>
-                <p>Remember the longest security code you can.</p>
+                <h2>Chữ số</h2>
+                <p>Ghi nhớ mã bảo mật dài nhất mà bạn có thể.</p>
+                <div class="target-box">Mốc thưởng: <span id="hub-target-num">12</span></div>
             </div>
             <div class="game-card" onclick="initChimp()">
-                <h2>Targets</h2>
-                <p>Track multiple disappearing targets in order.</p>
+                <h2>Mục tiêu</h2>
+                <p>Theo dõi và nhấp vào các mục tiêu biến mất theo đúng thứ tự.</p>
+                <div class="target-box">Mốc thưởng: <span id="hub-target-chimp">8</span></div>
             </div>
         </div>
+        
+        <button class="admin-btn" onclick="resetAdmin()">[Admin] Khôi phục Mốc Thưởng</button>
     </div>
 
     <div id="sequence" class="screen">
-        <h2>Sequence Memory</h2>
+        <h2>Trí nhớ trình tự</h2>
         <div class="split-layout">
             <div class="left-pane">
                 <div class="tutorial-text">
-                    <strong>Briefing</strong> 
-                    Memorize the sequence of flashing red squares. When prompted with "Your Turn!", replicate the exact pattern by clicking the terminals. The pattern increases by one node each round.
+                    <strong>Nhiệm vụ</strong> 
+                    Ghi nhớ chuỗi các ô vuông màu đỏ nhấp nháy. Khi có thông báo "Tới lượt bạn!", hãy lặp lại chính xác trình tự bằng cách nhấp vào các ô đó. Trình tự sẽ tăng thêm một ô sau mỗi vòng.
                 </div>
             </div>
             <div class="right-pane">
-                <h3 id="seq-level">Level: 1</h3>
+                <h3 id="seq-level">Cấp độ: 1</h3>
                 <p id="seq-status"></p>
                 <div class="sequence-grid" id="seq-grid"></div>
-                <button id="seq-start-btn" onclick="startSequenceLevel()">Start Protocol</button>
+                <button id="seq-start-btn" onclick="startSequenceLevel()">Bắt đầu Giao thức</button>
             </div>
         </div>
     </div>
 
     <div id="number" class="screen">
-        <h2>Number Memory</h2>
+        <h2>Trí nhớ chữ số</h2>
         <div class="split-layout">
             <div class="left-pane">
                 <div class="tutorial-text">
-                    <strong>Briefing</strong> 
-                    A secure code will flash on your HUD for a brief duration. Memorize the digits. Once the code vanishes, input it exactly to proceed. The code lengthens with each successful bypass.
+                    <strong>Nhiệm vụ</strong> 
+                    Một mã bảo mật sẽ nháy lên trên màn hình của bạn trong một khoảng thời gian ngắn. Hãy ghi nhớ các chữ số. Khi mã biến mất, hãy nhập lại chính xác để tiếp tục. Mã sẽ dài hơn sau mỗi lần giải mã thành công.
                 </div>
             </div>
             <div class="right-pane">
-                <h3 id="num-level-text">Level: 1</h3>
+                <h3 id="num-level-text">Cấp độ: 1</h3>
                 
                 <div id="num-show-area">
                     <div class="num-display" id="num-display">123</div>
@@ -408,47 +485,108 @@
                 </div>
 
                 <div id="num-input-area" style="display: none; text-align: center;">
-                    <p style="font-family: var(--font-head); font-size: 24px; text-transform: uppercase;">Input Security Code:</p>
+                    <p style="font-family: var(--font-head); font-size: 24px; text-transform: uppercase;">Nhập Mã Bảo Mật:</p>
                     <input type="number" id="num-input" class="num-input" autocomplete="off"><br><br>
-                    <button onclick="submitNumber()">Submit</button>
+                    <button onclick="submitNumber()">Xác nhận</button>
                 </div>
                 
-                <button id="num-start-btn" onclick="startNumberLevel()">Start Protocol</button>
+                <button id="num-start-btn" onclick="startNumberLevel()">Bắt đầu Giao thức</button>
             </div>
         </div>
     </div>
 
     <div id="chimp" class="screen">
-        <h2>Target Tracking</h2>
+        <h2>Theo dõi mục tiêu</h2>
         <div class="split-layout">
             <div class="left-pane">
                 <div class="tutorial-text">
-                    <strong>Briefing</strong> 
-                    Click the highlighted targets in numerical order (1, 2, 3...). The moment you engage target "1", the remaining intel is scrubbed from the UI. Rely on spatial memory to clear the remaining targets in sequence.
+                    <strong>Nhiệm vụ</strong> 
+                    Nhấp vào các mục tiêu được đánh dấu theo thứ tự tăng dần (1, 2, 3...). Ngay khi bạn chọn mục tiêu "1", các mục tiêu còn lại sẽ bị ẩn khỏi giao diện. Dựa vào trí nhớ không gian để dọn dẹp các mục tiêu còn lại theo thứ tự.
                 </div>
             </div>
             <div class="right-pane">
-                <h3 id="chimp-score-text">Targets: 4</h3>
-                <button id="chimp-start-btn" onclick="startChimpLevel()">Start Protocol</button>
+                <h3 id="chimp-score-text">Mục tiêu: 4</h3>
+                <button id="chimp-start-btn" onclick="startChimpLevel()">Bắt đầu Giao thức</button>
                 <div class="chimp-grid" id="chimp-grid"></div>
             </div>
         </div>
     </div>
 
     <div class="footer">
-        Made by Nguyen Trong Thien An and Bui Huu Nhat Minh 12CTin
+        Thực hiện bởi Nguyễn Trọng Thiên Ân và Bùi Hữu Nhật Minh 12CTin
+    </div>
+
+    <div id="prize-modal" class="modal-overlay">
+        <div class="val-popup">
+            <h1 class="popup-title">THÔNG BÁO HỆ THỐNG</h1>
+            <h2 class="popup-subtitle">ĐÃ MỞ KHÓA PHẦN THƯỞNG</h2>
+            <p id="popup-text" class="popup-text"></p>
+            <p class="popup-small">Cấu hình độ khó đã được nâng cấp cho đặc vụ tiếp theo.</p>
+            <button onclick="closePrizePopup()">Xác Nhận</button>
+        </div>
     </div>
 
     <script>
+        // ==========================================
+        // DYNAMIC PRIZE SYSTEM & VALORANT POPUP
+        // ==========================================
+        let targetSeq = parseInt(localStorage.getItem('targetSeq')) || 8;
+        let targetNum = parseInt(localStorage.getItem('targetNum')) || 12;
+        let targetChimp = parseInt(localStorage.getItem('targetChimp')) || 8; 
+
+        let onCloseAction = null; 
+
+        function updateHubTargets() {
+            document.getElementById('hub-target-seq').innerText = targetSeq;
+            document.getElementById('hub-target-num').innerText = targetNum;
+            document.getElementById('hub-target-chimp').innerText = targetChimp;
+        }
+
+        // HÀM RESET DÀNH CHO ADMIN
+        function resetAdmin() {
+            let pass = prompt("HỆ THỐNG BẢO MẬT: Nhập mật khẩu quản trị để khôi phục mốc thưởng:");
+            if (pass === "12CTIN") {
+                targetSeq = 8;
+                targetNum = 12;
+                targetChimp = 8;
+                localStorage.setItem('targetSeq', targetSeq);
+                localStorage.setItem('targetNum', targetNum);
+                localStorage.setItem('targetChimp', targetChimp);
+                updateHubTargets();
+                alert("Xác thực thành công. Toàn bộ mốc thưởng đã được đưa về trạng thái mặc định.");
+            } else if (pass !== null) {
+                alert("Từ chối truy cập. Sai mật khẩu quản trị.");
+            }
+        }
+        
+        function showPrizePopup(message, callback) {
+            document.getElementById('popup-text').innerText = message;
+            document.getElementById('prize-modal').style.display = 'flex';
+            onCloseAction = callback; 
+        }
+
+        function closePrizePopup() {
+            document.getElementById('prize-modal').style.display = 'none';
+            if (onCloseAction) {
+                onCloseAction(); 
+                onCloseAction = null;
+            }
+        }
+
+        updateHubTargets();
+
         // --- Navigation ---
         function showScreen(screenId) {
             document.querySelectorAll('.screen').forEach(s => {
                 s.classList.remove('active-screen');
-                // Force animation re-trigger by causing a reflow
                 void s.offsetWidth; 
             });
             document.getElementById(screenId).classList.add('active-screen');
             document.getElementById('home-btn').style.display = screenId === 'home' ? 'none' : 'block';
+            
+            if(screenId === 'home') {
+                updateHubTargets();
+            }
         }
 
         // ==========================================
@@ -463,7 +601,7 @@
             showScreen('sequence');
             document.getElementById('seq-start-btn').style.display = 'block';
             document.getElementById('seq-grid').style.display = 'none';
-            document.getElementById('seq-level').innerText = "Level: 1";
+            document.getElementById('seq-level').innerText = `Cấp độ: 1 (Mốc nhận thưởng: ${targetSeq})`;
             document.getElementById('seq-status').innerText = "";
             
             const grid = document.getElementById('seq-grid');
@@ -488,11 +626,11 @@
         async function playSequence() {
             seqIsShowing = true;
             seqPlayerIndex = 0;
-            document.getElementById('seq-level').innerText = "Level: " + seqLevel;
+            document.getElementById('seq-level').innerText = `Cấp độ: ${seqLevel} (Mốc nhận thưởng: ${targetSeq})`;
             
             const statusText = document.getElementById('seq-status');
-            statusText.innerText = "Memorize...";
-            statusText.style.color = "#ff4655"; // Red warning
+            statusText.innerText = "Ghi nhớ...";
+            statusText.style.color = "#ff4655"; 
             
             seq.push(Math.floor(Math.random() * 9));
             
@@ -506,8 +644,8 @@
             }
             
             seqIsShowing = false;
-            statusText.innerText = "Your Turn!";
-            statusText.style.color = "#ece8e1"; // White go text
+            statusText.innerText = "Tới lượt bạn!";
+            statusText.style.color = "#ece8e1"; 
         }
 
         function flashSquare(index) {
@@ -534,13 +672,23 @@
                     seqLevel++;
                     seqIsShowing = true; 
                     
-                    document.getElementById('seq-status').innerText = "Correct!";
+                    document.getElementById('seq-status').innerText = "Chính xác!";
                     document.getElementById('seq-status').style.color = "#8b978f";
                     
-                    setTimeout(playSequence, 800);
+                    if (seqLevel === targetSeq) {
+                        targetSeq = seqLevel + 1;
+                        localStorage.setItem('targetSeq', targetSeq);
+                        updateHubTargets();
+                        
+                        showPrizePopup(`Bạn đã vượt qua mốc Cấp độ ${seqLevel - 1}. Hiệu suất ghi nhớ đạt chuẩn. Giải thưởng đã được xác nhận.`, () => {
+                            setTimeout(playSequence, 500); 
+                        });
+                    } else {
+                        setTimeout(playSequence, 800);
+                    }
                 }
             } else {
-                alert("Protocol Failed! You reached Level " + seqLevel);
+                alert(`Giao thức thất bại! Bạn đã dừng lại ở Cấp độ ${seqLevel}.`);
                 initSequence();
             }
         }
@@ -556,7 +704,7 @@
             document.getElementById('num-start-btn').style.display = 'block';
             document.getElementById('num-show-area').style.display = 'none';
             document.getElementById('num-input-area').style.display = 'none';
-            document.getElementById('num-level-text').innerText = "Level: 1";
+            document.getElementById('num-level-text').innerText = `Cấp độ: 1 (Mốc nhận thưởng: ${targetNum})`;
             numLevel = 1;
         }
 
@@ -564,7 +712,7 @@
             document.getElementById('num-start-btn').style.display = 'none';
             document.getElementById('num-input-area').style.display = 'none';
             document.getElementById('num-show-area').style.display = 'block';
-            document.getElementById('num-level-text').innerText = "Level: " + numLevel;
+            document.getElementById('num-level-text').innerText = `Cấp độ: ${numLevel} (Mốc nhận thưởng: ${targetNum})`;
             
             currentNumber = "";
             for (let i = 0; i < numLevel; i++) {
@@ -596,9 +744,20 @@
             const answer = document.getElementById('num-input').value;
             if (answer === currentNumber) {
                 numLevel++;
-                startNumberLevel();
+                
+                if (numLevel === targetNum) {
+                    targetNum = numLevel + 1;
+                    localStorage.setItem('targetNum', targetNum);
+                    updateHubTargets();
+                    
+                    showPrizePopup(`Mã bảo mật chính xác. Bạn đã vượt qua mốc Cấp độ ${numLevel - 1}. Giải thưởng đã được xác nhận.`, () => {
+                        startNumberLevel(); 
+                    });
+                } else {
+                    startNumberLevel();
+                }
             } else {
-                alert(`Protocol Failed! \nCode was: ${currentNumber}\nYou entered: ${answer}\nLevel reached: ${numLevel}`);
+                alert(`Giao thức thất bại! \nMã là: ${currentNumber}\nBạn đã nhập: ${answer}\nCấp độ đạt được: ${numLevel}`);
                 initNumber();
             }
         }
@@ -616,7 +775,7 @@
         function initChimp() {
             showScreen('chimp');
             chimpLevel = 4;
-            document.getElementById('chimp-score-text').innerText = "Targets: 4";
+            document.getElementById('chimp-score-text').innerText = `Mục tiêu hiện tại: ${chimpLevel} (Mốc thưởng: ${targetChimp})`;
             document.getElementById('chimp-start-btn').style.display = 'block';
             document.getElementById('chimp-grid').innerHTML = '';
         }
@@ -624,7 +783,7 @@
         function startChimpLevel() {
             chimpStep = 1;
             document.getElementById('chimp-start-btn').style.display = 'none';
-            document.getElementById('chimp-score-text').innerText = "Targets: " + chimpLevel;
+            document.getElementById('chimp-score-text').innerText = `Mục tiêu hiện tại: ${chimpLevel} (Mốc thưởng: ${targetChimp})`;
             
             const grid = document.getElementById('chimp-grid');
             grid.innerHTML = '';
@@ -668,10 +827,21 @@
 
                 if (chimpStep > chimpLevel) {
                     chimpLevel++;
-                    setTimeout(startChimpLevel, 500);
+                    
+                    if (chimpLevel === targetChimp) {
+                        targetChimp = chimpLevel + 1;
+                        localStorage.setItem('targetChimp', targetChimp);
+                        updateHubTargets();
+                        
+                        showPrizePopup(`Triệt hạ thành công ${chimpLevel - 1} mục tiêu ẩn. Bạn đã vượt mốc yêu cầu. Giải thưởng đã được xác nhận.`, () => {
+                            setTimeout(startChimpLevel, 500); 
+                        });
+                    } else {
+                        setTimeout(startChimpLevel, 500);
+                    }
                 }
             } else {
-                alert("Protocol Failed! Score: " + chimpLevel);
+                alert(`Giao thức thất bại! Điểm: ${chimpLevel}`);
                 initChimp();
             }
         }
