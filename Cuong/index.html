@@ -1220,11 +1220,11 @@ const qs = {
   // ══════════════════════════════════════════════════════
 
   // √ số hoàn phương (≤ 225)
-  canHoanPhuong: () => {
-    const bases = [1,4,9,16,25,36,49,64,81,100,121,144,169,196,225];
-    const n = bases[rnd(0, bases.length-1)];
-    return { q:`√${n} = ?`, ans: Math.sqrt(n), hint:'Căn bậc hai', diff:'de' };
-  },
+canHoanPhuong: () => {
+  const bases = [1,4,9,16,25,36,49,64,81,100,121,144,169,196,225];
+  const n = bases[rnd(0, bases.length-1)];
+  return { q: `√${n} = ?`, ans: Math.sqrt(n), hint: 'Căn bậc hai số học', diff: 'de' };
+},
 
   // Tính giá trị hàm y = ax + b tại x cho trước (số nhỏ)
   hamBacNhatY: () => {
@@ -1233,10 +1233,10 @@ const qs = {
   },
 
   // Tìm x trong PT bậc nhất ax + b = c, nghiệm nguyên dương nhỏ
-  ptBacNhatDon: () => {
-    const x = rnd(1,9), a = rnd(1,5), b = rnd(0,9);
-    return { q:`${a}x + ${b} = ${a*x+b} → x = ?`, ans: x, hint:'PT bậc nhất', diff:'de' };
-  },
+ptBacNhatDon: () => {
+  const x = rnd(1,9), a = rnd(2,5), b = rnd(1,10);
+  return { q: `${a}x − ${b} = ${a*x - b}. Tìm x = ?`, ans: x, hint: 'PT bậc nhất', diff: 'de' };
+},
 
   // Pytago bộ số quen: tìm cạnh huyền
   pytago3_4_5: () => {
@@ -1270,7 +1270,38 @@ const qs = {
     if(rnd(0,1)===0) return { q:`Hình vuông cạnh ${a}. Diện tích = ?`, ans: a*a, hint:'Hình học', diff:'de' };
     return { q:`Hình chữ nhật ${a} × ${b}. Diện tích = ?`, ans: a*b, hint:'Hình học', diff:'de' };
   },
+// ── DỄ MỚI 1: Giải BPT bậc nhất ax + b < c, nghiệm dương nhỏ ──
+bptBacNhatDon: () => {
+  const x = rnd(1,8), a = rnd(1,4), b = rnd(0,6);
+  // ax + b < a*x + b + a  =>  x < x+1 (luôn đúng – tránh tầm thường)
+  // Thay vào: ax < c  => x < c/a, chọn c = a*(x+1) để nghiệm là x
+  const c = a * x + b + rnd(1,3); // ax + b < c  => x < (c-b)/a
+  const ans = Math.floor((c - b) / a);
+  return { q: `${a}x + ${b} <= ${c}. Nghiệm nguyên dương lớn nhất = ?`, ans, hint: 'BPT bậc nhất', diff: 'de' };
+},
 
+// ── DỄ MỚI 2: Căn bậc ba của số lập phương nhỏ ──
+canBacBa: () => {
+  const cubes = [1,8,27,64,125,216,343];
+  const n = cubes[rnd(0, cubes.length-1)];
+  return { q: `∛${n} = ?`, ans: Math.round(Math.cbrt(n)), hint: 'Căn bậc ba', diff: 'de' };
+},
+
+// ── DỄ MỚI 5: Diện tích hình tròn S = πR², hỏi hệ số (S/π) ──
+dienTichHinhTron: () => {
+  const R = rnd(1,6);
+  return { q: `Hình tròn bán kính ${R}. Diện tích = ?π`, ans: R*R, hint: 'Hình tròn', diff: 'de' };
+},
+
+  ptBacNhatDon: () => {
+    const x = rnd(1, 9), a = rnd(2, 5), b = rnd(1, 10);
+    return { q: `${a}x - ${b} = ${a * x - b}. Tìm x = ?`, ans: x, hint: 'Phương trình bậc nhất', diff: 'de' };
+  },
+
+chuViTron: () => {
+  const r = rnd(1,10);
+  return { q: `Đường tròn bán kính R = ${r}. Chu vi C = ?π`, ans: 2*r, hint: 'C = 2πR', diff: 'de' };
+},
   // ══════════════════════════════════════════════════════
   // TRUNG BÌNH — mức 3–5
   // ══════════════════════════════════════════════════════
@@ -1334,10 +1365,10 @@ const qs = {
   },
 
   // Rút gọn √(a²·b) hỏi kết quả khi biết a và b
-  rutGonCan: () => {
-    const a = rnd(2,8), b = [2,3,5,6,7][rnd(0,4)];
-    return { q:`√${a*a*b} = ${a}√? → điền số vào dấu ?`, ans: b, hint:'Rút gọn √', diff:'trung' };
-  },
+rutGonCan: () => {
+  const a = rnd(2,5), b = 2;
+  return { q: `Rút gọn √${a*a*b} = a√2. Tìm a = ?`, ans: a, hint: 'Khai phương tích', diff: 'trung' };
+},
 
   // Nhân hai căn: √a · √b = √(ab), ab là số chính phương
   nhanCan: () => {
@@ -1359,7 +1390,101 @@ const qs = {
     const sorted = Array.from({length:n}, (_,i) => rnd(1,5)+i*rnd(1,3));
     return { q:`Trung vị của {${sorted.join(', ')}} = ?`, ans: sorted[Math.floor(n/2)], hint:'Thống kê', diff:'trung' };
   },
+// ── TB MỚI 1: BPT bậc nhất, nghiệm là khoảng, hỏi nghiệm nguyên dương ──
+bptTimNghiemNguyen: () => {
+  const a = rnd(1,3), b = rnd(-6,6);
+  const xMax = rnd(2,7);
+  const c = a*xMax + b + rnd(1,2);
+  // ax + b < c  =>  x < (c-b)/a
+  const ans = Math.floor((c-b)/a);
+  return { q: `${a}x ${b>=0?'+ '+b:'− '+(-b)} < ${c}. Nghiệm nguyên dương lớn nhất = ?`, ans, hint: 'BPT bậc nhất', diff: 'trung' };
+},
 
+// ── TB MỚI 2: Hệ PT bậc nhất – ẩn có hệ số phân số đơn giản (nhân 2) ──
+hePT_hesoNho: () => {
+  const x = rnd(2,8), y = rnd(2,8);
+  // 2x + 3y = c1 ; x - y = c2
+  const c1 = 2*x+3*y, c2 = x-y;
+  return { q: `2x + 3y = ${c1}; x − y = ${c2}. Tìm x = ?`, ans: x, hint: 'Hệ PT', diff: 'trung' };
+},
+
+// ── TB MỚI 3: Viết PT bậc nhất 2 ẩn – tìm y khi cho x ──
+ptBacNhatHaiAnY: () => {
+  const a = rnd(1,4), b = rnd(1,4), c = rnd(2,20);
+  const x0 = rnd(1,4);
+  const y0 = c - a*x0;
+  if(y0 <= 0) return qs.hePT_the(); // fallback
+  return { q: `${a}x + ${b}y = ${a*x0 + b*y0}. Tại x = ${x0}, y = ?`, ans: y0, hint: 'PT bậc nhất 2 ẩn', diff: 'trung' };
+},
+
+// ── TB MỚI 4: Rút gọn biểu thức √a · √a = a ──
+nhanCanBang: () => {
+  const n = rnd(2,15);
+  return { q: `√${n} × √${n} = ?`, ans: n, hint: 'Nhân căn', diff: 'trung' };
+},
+
+// ── TB MỚI 5: Chia căn √(a/b) = √a / √b, ab số đẹp ──
+chiaCan: () => {
+  const pairs = [[4,1,2],[9,1,3],[25,1,5],[16,4,2],[36,9,2],[100,4,5]];
+  const [a,b,c] = pairs[rnd(0,pairs.length-1)];
+  return { q: `√${a} ÷ √${b} = ?`, ans: c, hint: 'Chia căn', diff: 'trung' };
+},
+
+// ── TB MỚI 6: Góc ở tâm – tính cung tương ứng (°) ──
+gocOTam: () => {
+  const deg = [30,45,60,90,120,150,180][rnd(0,6)];
+  return { q: `Góc ở tâm ${deg}°. Số đo cung bị chắn = ?°`, ans: deg, hint: 'Góc ở tâm', diff: 'trung' };
+},
+
+// ── TB MỚI 7: Góc nội tiếp = 1/2 góc ở tâm cùng chắn cung ──
+gocNoiTiep: () => {
+  const gocTam = [60,80,100,120][rnd(0,3)];
+  return { q: `Góc ở tâm bằng ${gocTam}°. Góc nội tiếp cùng chắn cung đó = ?°`, ans: gocTam/2, hint: 'Góc nội tiếp = ½ Góc ở tâm', diff: 'trung' };
+},
+// ── TB MỚI 9: Diện tích hình quạt tròn S = (α/360)·πR² → S/π ──
+dienTichQuatTron: () => {
+  const R = rnd(2,6);
+  const alphaList = [90, 180, 60, 120];
+  const alpha = alphaList[rnd(0,3)];
+  const ans = Math.round(alpha/360 * R*R * 100)/100;
+  // ans = (alpha/360)*R²  (hệ số của π)
+  const num = alpha * R * R;
+  const den = 360;
+  const g = (a,b) => b===0?a:((a,b)=>b===0?a:arguments.callee(b,a%b))(b,a%b);
+  // simplified fraction
+  return { q: `Hình quạt tròn R=${R}, góc ở tâm ${alpha}°. S = ?π (rút gọn phân số hoặc số)`, ans: num/den, hint: 'Hình quạt', diff: 'trung' };
+},
+
+// ── TB MỚI 10: Bất đẳng thức – so sánh √a và √b (a,b nguyên dương) ──
+batDangThucCan: () => {
+  const a = rnd(2,12), b = a + rnd(1,5);
+  return { q: `√${a} so với √${b}: nhập 1 nếu √${a} < √${b}, nhập 0 nếu ngược lại`, ans: 1, hint: 'Bất đẳng thức', diff: 'trung' };
+},
+ptTich: () => {
+  const x1 = rnd(1,5), x2 = rnd(6,10);
+  return { q: `(x − ${x1})(x − ${x2}) = 0. Nghiệm lớn nhất = ?`, ans: x2, hint: 'PT tích', diff: 'trung' };
+},
+
+  hePT_the: () => {
+    const x = rnd(1, 5), y = rnd(1, 5);
+    const c2 = 2 * x + y;
+    return { q: `Hệ PT: x + y = ${x + y} và 2x + y = ${c2}. Tìm x?`, ans: x, hint: 'Phương pháp thế/cộng', diff: 'trung' };
+  },
+
+bptNguyenDuong: () => {
+  const a = rnd(1,3), c = rnd(10,20);
+  const ans = Math.floor((c-1)/a);
+  return { q: `${a}x + 1 < ${c}. Nghiệm nguyên dương lớn nhất = ?`, ans, hint: 'Giải BPT', diff: 'trung' };
+},
+
+luongGiacSin: () => {
+  const doi = 3, huyen = 5;
+  return { q: `Tam giác vuông có cạnh đối ${doi}, cạnh huyền ${huyen}. sin góc đó = ?`, ans: 0.6, hint: 'sin = Đối / Huyền', diff: 'trung' };
+},
+
+tiepTuyenCoBan: () => {
+  return { q: `Tiếp tuyến của đường tròn vuông góc với bán kính tại tiếp điểm. Đúng (1) hay Sai (0)?`, ans: 1, hint: 'Tính chất tiếp tuyến', diff: 'trung' };
+},
   // ══════════════════════════════════════════════════════
   // KHÓ — mức 6–7
   // ══════════════════════════════════════════════════════
@@ -1445,13 +1570,258 @@ const qs = {
     const cStr = c>0?`+ ${c}`: c<0?`− ${-c}`:'';
     return { q:`y = ${aStr}x² ${bStr} ${cStr}, x = ${x} → y = ?`, ans: y, hint:'Hàm bậc hai', diff:'kho' };
   },
+// ── KHÓ MỚI 1: BPT bậc nhất có ẩn ở cả hai vế ──
+bptHaiVe: () => {
+  const a = rnd(2,5), b = rnd(1,5), c = rnd(1,4), d = rnd(1,8);
+  // ax + b > cx + d  =>  (a-c)x > d-b
+  if(a <= c) return qs.bptTimNghiemNguyen?.() || qs.ptBacHaiNghiemLon();
+  const ans = Math.ceil((d-b)/(a-c));
+  return { q: `${a}x + ${b} > ${c}x + ${d}. Nghiệm nguyên dương nhỏ nhất = ?`, ans: ans > 0 ? ans : 1, hint: 'BPT hai vế', diff: 'kho' };
+},
 
-};
+// ── KHÓ MỚI 2: Hệ PT 3 ẩn (thực ra 2 ẩn + 1 phương trình thứ 3 phụ) ──
+hePT_3pt: () => {
+  const x = rnd(1,5), y = rnd(1,5);
+  return { q: `x + y = ${x+y}; 2x − y = ${2*x-y}; 3x + y = ${3*x+y}. Tìm x = ?`, ans: x, hint: 'Hệ PT (kiểm tra)', diff: 'kho' };
+},
+
+// ── KHÓ MỚI 3: Phương trình chứa ẩn dưới căn √(ax+b) = c ──
+ptChuaCan: () => {
+  const c = rnd(2,7), a = rnd(1,4), b = rnd(0,6);
+  // √(ax+b) = c  =>  ax+b = c²  =>  x = (c²-b)/a
+  const val = c*c - b;
+  if(val <= 0 || val % a !== 0) return qs.vieteNguoc();
+  const ans = val / a;
+  return { q: `√(${a}x + ${b}) = ${c}. Tìm x = ?`, ans, hint: 'PT chứa căn', diff: 'kho' };
+},
+
+// ── KHÓ MỚI 8: Góc nội tiếp chắn nửa đường tròn = 90° ──
+gocNoiTiepNuaDuongTron: () => {
+  return { q: `Góc nội tiếp chắn nửa đường tròn = ?°`, ans: 90, hint: 'Góc nội tiếp', diff: 'kho' };
+},
+
+// ── KHÓ MỚI 9: Hai tiếp tuyến từ ngoài bằng nhau – tìm chu vi tam giác ──
+haiTiepTuyen: () => {
+  const a = rnd(3,8), b = rnd(2,6), c = rnd(3,7);
+  // MA = MB = a, NC = ND = c, AB = a+b (ví dụ minh hoạ)
+  const MA = a, MC = b;
+  return { q: `Từ M ngoài đường tròn kẻ 2 tiếp tuyến MA=${MA} và MB. MB = ?`, ans: MA, hint: 'Hai tiếp tuyến bằng nhau', diff: 'kho' };
+},
+
+// ── KHÓ MỚI 10: Độ dài cung l = (α/180)·π·R ──
+doDaiCung: () => {
+  const R = rnd(2,6), alpha = [60,90,120,180][rnd(0,3)];
+  // l = alpha/180 * pi * R  → hỏi hệ số của π
+  const coeff = alpha * R / 180;
+  return { q: `Đường tròn R=${R}, góc ở tâm ${alpha}°. Độ dài cung = ?π`, ans: coeff, hint: 'Độ dài cung', diff: 'kho' };
+},
+
+// ── KHÓ MỚI 11: PT bậc hai – tìm m để PT có nghiệm kép (Δ=0) ──
+timMNghiemKep: () => {
+  // x² + 2mx + m² = 0 luôn có nghiệm kép  (b=2m, c=m²)
+  // dạng: x² + bx + m = 0, Δ=0 => b²-4m=0 => m=b²/4
+  const b = [2,4,6,8][rnd(0,3)];
+  const m = b*b/4;
+  return { q: `x² + ${b}x + m = 0 có nghiệm kép. m = ?`, ans: m, hint: 'Nghiệm kép Δ=0', diff: 'kho' };
+},
+
+// ── KHÓ MỚI 12: Bất phương trình bậc nhất kết hợp – giao nghiệm ──
+bptGiaoNghiem: () => {
+  const xMin = rnd(1,4), xMax = xMin + rnd(2,5);
+  // x > xMin AND x < xMax
+  const ans = xMax - 1; // nghiệm nguyên lớn nhất
+  return { q: `x > ${xMin} và x < ${xMax}. Nghiệm nguyên lớn nhất = ?`, ans, hint: 'Giao BPT', diff: 'kho' };
+},
+
+// ── KHÓ MỚI 13: Hệ PT – hai nghiệm phân số đơn giản ──
+hePT_phanSo: () => {
+  // 2x + y = 5 ; x + 2y = 4  =>  x = 2, y = 1 (dễ) – scale up
+  const k = rnd(2,4);
+  const x = rnd(1,4), y = rnd(1,4);
+  const c1 = k*x + y, c2 = x + k*y;
+  return { q: `${k}x + y = ${c1}; x + ${k}y = ${c2}. Tìm x + y = ?`, ans: x+y, hint: 'Hệ PT (tổng nghiệm)', diff: 'kho' };
+},
+
+// ── KHÓ MỚI 14: Căn thức – trục căn thức ở mẫu 1/(√a+√b) ──
+trucCanMau: () => {
+  const a = [4,9,16,25][rnd(0,3)], b = [1,4,9][rnd(0,2)];
+  const sqA = Math.sqrt(a), sqB = Math.sqrt(b);
+  const ans = sqA - sqB; // 1/(√a+√b) * (√a-√b)/(√a-√b) = (√a-√b)/(a-b)
+  if(a === b) return qs.rutGonCan();
+  return { q: `Trục căn: 1/(√${a}+√${b}) = (√${a}−√${b})/${a-b}. Tử = √${a}−√?`, ans: b, hint: 'Trục căn thức', diff: 'kho' };
+},
+
+// ── KHÓ MỚI 17: Hình vành khuyên S = π(R²−r²) ──
+hinhVanhKhuyen: () => {
+  const R = rnd(4,8), r = rnd(1, R-1);
+  return { q: `Hình vành khuyên R=${R}, r=${r}. S = ?(R²−r²)π → điền số hệ số`, ans: 1, hint: 'Hình vành khuyên', diff: 'kho' };
+},
+
+// ── KHÓ MỚI 18: Bất đẳng thức Cauchy-Schwarz đơn giản a + b ≥ 2√(ab) ──
+batDangThucAB: () => {
+  const a = rnd(1,9), b = rnd(1,9);
+  const minSum = 2 * Math.round(Math.sqrt(a*b));
+  // a+b so với 2√(ab): hỏi 2√(ab) khi ab là số chính phương
+  const sqPairs = [[1,4,2],[4,9,6],[1,9,3],[4,16,8],[9,16,12]];
+  const [p,q,twoSqrt] = sqPairs[rnd(0,4)];
+  return { q: `a=${p}, b=${q}. 2√(ab) = ?`, ans: twoSqrt, hint: 'Bất đẳng thức Cauchy', diff: 'kho' };
+},
+
+// ── KHÓ MỚI 19: Giải PT bậc hai bằng công thức nghiệm, tìm tổng √Δ và b ──
+congThucNghiem: () => {
+  const r1 = rnd(1,6), r2 = rnd(1,6);
+  const b = -(r1+r2), c = r1*r2;
+  // x = (-b ± √Δ)/2 = (S ± √Δ)/2 với S = r1+r2, Δ=(r1-r2)²
+  const delta = (r1-r2)*(r1-r2);
+  return { q: `x² ${b<0?b:'+'+b}x + ${c} = 0. √Δ = ?`, ans: Math.abs(r1-r2), hint: 'Công thức nghiệm', diff: 'kho' };
+},
+
+// ── KHÓ MỚI 20: PT bậc hai có một nghiệm cho trước, tìm tham số k ──
+timKNghiem: () => {
+  const x0 = rnd(1,5), k = rnd(1,8);
+  // x² - k·x + (x0² - k·x0) = 0 có nghiệm x0
+  // Đặt PT: x² + px + q = 0, x0 là nghiệm  => x0² + p·x0 + q = 0
+  // => p = -(x0 + r2), q = x0·r2 với r2=k
+  const r2 = k;
+  const p = -(x0+r2), q = x0*r2;
+  const pStr = p>0?`+ ${p}x`: `${p}x`;
+  const qStr = q>=0?`+ ${q}`: `${q}`;
+  return { q: `x² ${pStr} ${qStr} = 0 có một nghiệm x=${x0}. Nghiệm còn lại = ?`, ans: r2, hint: 'Nghiệm PT bậc hai', diff: 'kho' };
+},
+
+  heThucLuong_h: () => {
+    return { q: `Tam giác vuông có 2 cạnh góc vuông là 3 và 4. Đường cao ứng với cạnh huyền bằng?`, ans: 2.4, hint: '$h = (a \\cdot b) / c$', diff: 'kho' };
+  },
+
+viTriDuongTron: () => {
+  const R = 5, r = 3, d = 8;
+  return { q: `(O; ${R}) và (O'; ${r}) có OO' = ${d}. Hai đường tròn tiếp xúc ngoài (1) hay trong (0)?`, ans: 1, hint: 'd = R + r → tiếp xúc ngoài', diff: 'kho' };
+},
+
+dienTichVanhKhuyen: () => {
+  const R = 5, r = 3;
+  return { q: `Hình vành khuyên R = ${R}, r = ${r}. Diện tích S = ?π`, ans: R*R - r*r, hint: 'S = π(R² − r²)', diff: 'kho' };
+},
+
+doDaiCung: () => {
+  const R = 6, n = 90;
+  return { q: `Đường tròn R = ${R}, góc ở tâm ${n}°. Độ dài cung = ?π`, ans: (n*R)/180, hint: 'l = πRn/180', diff: 'kho' };
+},
+
+ptMauThuc: () => {
+  return { q: `(x² − 1)/(x − 1) = 3, x ≠ 1. Tìm x = ?`, ans: 2, hint: 'Rút gọn: x + 1 = 3', diff: 'kho' };
+},
+
+gocNoiTiepChanNuaTron: () => {
+  return { q: `Góc nội tiếp chắn nửa đường tròn = ?°`, ans: 90, hint: 'Hệ quả góc nội tiếp', diff: 'kho' };
+},
+
+vieteNguoc_Kho: () => {
+  const s = 7, p = 12;
+  return { q: `PT bậc hai có tổng nghiệm ${s} và tích nghiệm ${p}. Nghiệm lớn = ?`, ans: 4, hint: 'x² − Sx + P = 0', diff: 'kho' };
+}};
 
 const banks = {
-  de:    ['canHoanPhuong','hamBacNhatY','ptBacNhatDon','pytago3_4_5','pytago_canhgv','canBinhPhuong','binhPhuong','dienTich'],
-  trung: ['ptBacHaiNghiemNho','ptBacHaiNghiemLon','vieteS','vieteP','hePT_congTru','hePT_tong_y','hePT_the','trungBinh','rutGonCan','nhanCan','hamBacNhatTimB','trungVi'],
-  kho:   ['vieteNguoc','dinhParabol','dinhParabolY','hePTkho','hePTkhoY','tinhDelta','canDelta','xacSuat','hamBacHaiGiaTriY'],
+  // ══════════════════════════════════════════════════════
+  // MỨC DỄ (DE) - Tổng cộng: 13 câu
+  // ══════════════════════════════════════════════════════
+  de: [
+    // Số học & Căn thức
+    'canHoanPhuong', 
+    'canBinhPhuong', 
+    'canBacBa', 
+    'binhPhuong',
+    // Đại số
+    'ptBacNhatDon', 
+    'hamBacNhatY', 
+    'bptBacNhatDon',
+    // Hình học cơ bản
+    'pytago3_4_5', 
+    'pytago_canhgv', 
+    'dienTich', 
+    'chuViTron', 
+    'chuViDuongTron', 
+    'dienTichHinhTron'
+  ],
+
+  // ══════════════════════════════════════════════════════
+  // MỨC TRUNG BÌNH (TRUNG) - Tổng cộng: 26 câu
+  // ══════════════════════════════════════════════════════
+  trung: [
+    // Phương trình & Hệ phương trình
+    'ptBacHaiNghiemNho', 
+    'ptBacHaiNghiemLon', 
+    'ptTich',
+    'vieteS', 
+    'vieteP', 
+    'hePT_congTru', 
+    'hePT_tong_y', 
+    'hePT_the', 
+    'hePT_hesoNho', 
+    'ptBacNhatHaiAnY', 
+    'hamBacNhatTimB',
+    // Căn thức & Biến đổi
+    'rutGonCan', 
+    'nhanCan', 
+    'nhanCanBang', 
+    'chiaCan',
+    // Bất phương trình
+    'bptTimNghiemNguyen', 
+    'bptNguyenDuong', 
+    'batDangThucCan',
+    // Hình học & Lượng giác
+    'luongGiacSin', 
+    'gocOTam', 
+    'gocNoiTiep', 
+    'tiepTuyen_pytago', 
+    'tiepTuyenCoBan', 
+    'dienTichQuatTron',
+    // Thống kê
+    'trungBinh', 
+    'trungVi'
+  ],
+
+  // ══════════════════════════════════════════════════════
+  // MỨC KHÓ (KHO) - Tổng cộng: 30 câu
+  // ══════════════════════════════════════════════════════
+  kho: [
+    // Phương trình & Hệ phương trình nâng cao
+    'vieteNguoc', 
+    'vieteNguoc_Kho', 
+    'tinhDelta', 
+    'canDelta', 
+    'congThucNghiem', 
+    'timMNghiemKep', 
+    'timKNghiem', 
+    'ptMauThuc',
+    'hePTkho', 
+    'hePTkhoY', 
+    'hePT_3pt', 
+    'hePT_phanSo',
+    // Parabol & Hàm số
+    'dinhParabol', 
+    'dinhParabolY', 
+    'hamBacHaiGiaTriY',
+    // Căn thức phức tạp
+    'trucCanMau', 
+    'ptChuaCan',
+    // Bất đẳng thức & Giao nghiệm
+    'bptHaiVe', 
+    'bptGiaoNghiem', 
+    'batDangThucAB', 
+    'batDangThucCauchy',
+    // Hình học nâng cao
+    'heThucLuong_h', 
+    'viTriDuongTron', 
+    'haiTiepTuyen', 
+    'gocNoiTiepNuaDuongTron', 
+    'gocNoiTiepChanNuaTron', 
+    'doDaiCung', 
+    'hinhVanhKhuyen', 
+    'dienTichVanhKhuyen',
+    // Xác suất
+    'xacSuat'
+  ]
 };
 
 function tierOf(level){
