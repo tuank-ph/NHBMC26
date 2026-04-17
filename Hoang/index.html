@@ -1,63 +1,82 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quái Xế Đồ Thị | Graph Racer</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@400;500&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div id="ui-layer">
         <header id="game-header" class="hidden">
             <div class="logo">Quái Xế Đồ Thị</div>
             <div class="stats">
-                <span class="timer">Thời gian: <span id="time">02:00</span></span>
-                <span class="score-board">Điểm: <span id="score">0</span></span>
+                <span class="timer">Thời gian: <span id="time">03:00</span></span>
+                <span class="score-board">Level: <span id="score">0</span></span>
             </div>
         </header>
 
         <div id="main-menu-overlay" class="overlay">
             <h1>QUÁI XẾ ĐỒ THỊ</h1>
-            <p>Chiến Dịch: Vi-ét Hỗn Hợp (Cơ bản & Nâng cao)</p>
+            <p>Nhiệm vụ: Bắn tia laser xuyên qua 2 mục tiêu trên Lá chắn!</p>
             <div style="display: flex; gap: 20px;">
-                <button id="btn-rules" class="l-btn" style="background: #2b2b2b; color: #66fcf1; border: 1px solid #66fcf1;">CẨM NANG PHÁ MÃ</button>
+                <button id="btn-rules" class="l-btn"
+                    style="background: #2b2b2b; color: #66fcf1; border: 1px solid #66fcf1;">HỒ SƠ MẬT: LÕI HỆ
+                    THỐNG</button>
                 <button id="btn-play" class="l-btn">XUẤT PHÁT</button>
             </div>
         </div>
 
         <div id="rules-overlay" class="overlay hidden">
-            <h2 style="font-size: 2.5rem; color: #fc66fc; font-family: 'Orbitron', sans-serif; margin-bottom: 20px;">CẨM NANG PHÁ MÃ VI-ÉT</h2>
-            <div style="max-width: 800px; max-height: 65vh; overflow-y: auto; text-align: left; margin-bottom: 30px; font-size: 1.2rem; color: #c5c6c7; line-height: 1.6; background: rgba(0,0,0,0.8); padding: 25px; border-radius: 10px; border: 1px solid #fc66fc; box-shadow: 0 0 20px rgba(252, 102, 252, 0.3);">
-                
-                <h3 style="color: #66fcf1; margin-bottom: 10px;">🎯 MỤC TIÊU CỐT LÕI</h3>
-                <p>Tìm phương trình <b>y = m*x + n</b> để bắn tia laser đi qua 2 mục tiêu trên Lá chắn <b>y = a*x²</b>.</p>
+            <h2 style="font-size: 2.5rem; color: #fc66fc; font-family: 'Orbitron', sans-serif; margin-bottom: 20px;">
+                PHÂN TÍCH QUỸ ĐẠO BẮN</h2>
+            <div
+                style="max-width: 800px; max-height: 65vh; overflow-y: auto; text-align: left; margin-bottom: 30px; font-size: 1.2rem; color: #c5c6c7; line-height: 1.6; background: rgba(0,0,0,0.8); padding: 25px; border-radius: 10px; border: 1px solid #fc66fc; box-shadow: 0 0 20px rgba(252, 102, 252, 0.3);">
 
-                <h3 style="color: #fce366; margin-top: 20px; margin-bottom: 10px;">DẠNG 1: VI-ÉT NGUYÊN BẢN (DỄ)</h3>
-                <p>Radar cho sẵn Tổng <b>S</b> và Tích <b>P</b>. Áp dụng luôn công thức:</p>
-                <ul style="list-style-type: none; font-size: 1.3rem; font-weight: bold; padding-left: 10px;">
-                    <li style="color: #5cfc66;">👉 m = a * S</li>
-                    <li style="color: #5cfc66;">👉 n = -a * P</li>
-                </ul>
-
-                <h3 style="color: #ff007f; margin-top: 20px; margin-bottom: 10px;">DẠNG 2: VI-ÉT KHUYẾT (KHÓ HƠN)</h3>
-                <p>Radar chỉ lộ 1 mục tiêu ở hoành độ <b>x₁</b> và cho biết Tích <b>P</b> (hoặc Tổng S).</p>
-                <p><b>Cách giải:</b> Bạn phải tự nhẩm ra mục tiêu thứ hai trước!</p>
-                <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin-top: 10px;">
-                    <p><b>Ví dụ:</b> a = 1, lộ x₁ = 2, radar báo Tích P = 10.</p>
-                    <p>• Bước 1: Nhẩm kẻ địch 2: <b>x₂ = P / x₁</b> = 10 / 2 = 5</p>
-                    <p>• Bước 2: Tự tính Tổng: <b>S = x₁ + x₂</b> = 2 + 5 = 7</p>
-                    <p>• Bước 3: Áp dụng công thức cũ: <b>m = 1*7 = 7</b>, <b>n = -1*10 = -10</b></p>
+                <h3 style="color: #66fcf1; margin-bottom: 10px;">🎯 BẢN CHẤT CỦA SỰ VA CHẠM</h3>
+                <p>Kẻ địch trốn trên lá chắn parabol <b>y = a*x²</b>. Đường đạn laser của bạn là đường thẳng <b>y = m*x
+                        + n</b>.</p>
+                <p>Tại điểm laser bắn trúng lá chắn, ta có phương trình giao điểm:</p>
+                <div
+                    style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 5px; text-align: center; margin: 10px 0; font-size: 1.5rem; color: #fce366; font-weight: bold;">
+                    a*x² = m*x + n<br>
+                    <span style="font-size: 1.2rem; color: #5cfc66;">=> a*x² - m*x - n = 0</span>
                 </div>
 
+                <h3 style="color: #ff007f; margin-top: 20px; margin-bottom: 10px;">🧠 GIẢI MÃ BẰNG ĐỊNH LÝ VI-ÉT</h3>
+                <p>Vị trí 2 kẻ địch (hoành độ <b>x₁</b> và <b>x₂</b>) chính là <b>2 nghiệm</b> của phương trình trên!
+                </p>
+                <p>Áp dụng định lý Vi-ét cho phương trình bậc 2 (Ax² + Bx + C = 0), bạn có thể dễ dàng nhẩm ra thông số
+                    đạn (m, n) mà không cần tính toán phức tạp:</p>
+
+                <ul style="list-style-type: none; margin-top: 15px; padding-left: 0;">
+                    <li style="margin-bottom: 10px; padding-left: 15px; border-left: 3px solid #5cfc66;">
+                        <b>1. TỔNG 2 NGHIỆM (x₁ + x₂):</b><br>
+                        Theo Vi-ét là -B/A. Tức là: <b>-(-m) / a = m / a</b><br>
+                        <i style="color: #aaa;">Gợi ý: Tìm tổng 2 mục tiêu, nhân với 'a' sẽ ra 'm'.</i>
+                    </li>
+                    <li style="padding-left: 15px; border-left: 3px solid #ff007f;">
+                        <b>2. TÍCH 2 NGHIỆM (x₁ * x₂):</b><br>
+                        Theo Vi-ét là C/A. Tức là: <b>-n / a</b><br>
+                        <i style="color: #aaa;">Gợi ý: Tìm tích 2 mục tiêu, nhân với '-a' sẽ ra 'n'.</i>
+                    </li>
+                </ul>
+
+                <p style="margin-top: 20px; text-align: center; font-weight: bold; color: #66fcf1;">Hãy quan sát các con
+                    số radar báo về và dùng tư duy để khóa mục tiêu!</p>
+
             </div>
-            <button id="btn-back-menu" class="l-btn">ĐÃ RÕ CÔNG THỨC!</button>
+            <button id="btn-back-menu" class="l-btn">ĐÃ RÕ BẢN CHẤT, CHIẾN THÔI!</button>
         </div>
 
         <div id="game-over-overlay" class="overlay hidden">
-            <h1>HẾT NHIÊN LIỆU!</h1>
-            <p>Số lượng mục tiêu đã tiêu diệt: <span id="final-score">0</span></p>
+            <h1>HẾT THỜI GIAN!</h1>
+            <p>Level đạt được: <span id="final-score">0</span></p>
             <button id="restart-btn" class="l-btn">THỬ LẠI</button>
         </div>
 
@@ -66,9 +85,9 @@
                 <h2 id="task-title" style="color: #fc66fc;">RADAR MỤC TIÊU</h2>
                 <p id="task-desc">Đang dò tần số...</p>
                 <div class="points-display" id="points-display">
-                    </div>
+                </div>
             </div>
-            
+
             <div class="input-panel glass">
                 <div class="input-group">
                     <span class="function-label">f(x) = </span>
@@ -82,4 +101,5 @@
     <canvas id="graph-canvas"></canvas>
     <script src="script.js"></script>
 </body>
+
 </html>

@@ -45,17 +45,17 @@ document.getElementById('btn-play').addEventListener('click', startGame);
 document.getElementById('restart-btn').addEventListener('click', startGame);
 
 // Game State
-let score = 0;
+let level = 1; // Chuyển từ hệ thống Điểm sang Level (bắt đầu từ 1)
 let currentTargets = [];
 let shieldParabola = null;
 let currentA = 1;
-let gameState = 'IDLE'; 
-let currentPath = []; 
+let gameState = 'IDLE';
+let currentPath = [];
 let carAnimationIndex = 0;
 let timeLeft = 120; // 2 phút
 let timerInterval = null;
 let isPlaying = false;
-let hiddenMode = 2; // 0: Hiện hết, 1: Giấu 1 điểm, 2: Giấu cả 2 điểm
+let hiddenMode = 0; // 0: Hiện hết, 1: Giấu 1 điểm, 2: Giấu cả 2 điểm
 
 function mapX(x) { return ((x - X_MIN) / (X_MAX - X_MIN)) * cw; }
 function mapY(y) { return ch - ((y - Y_MIN) / (Y_MAX - Y_MIN)) * ch; }
@@ -65,19 +65,22 @@ function generateLevel() {
     formulaInput.value = '';
     formulaInput.focus();
     hideMessage();
-    
-    const a_options = [1, -1, 2, -2];
+
+    const a_options = [1, 1, -1, 2];
     currentA = a_options[Math.floor(Math.random() * a_options.length)];
     shieldParabola = math.compile(`${currentA} * x^2`);
-    let equationStr = currentA === 1 ? 'x²' : currentA === -1 ? '-x²' : `${currentA}x²`;
 
-    // Sinh nghiệm x1, x2 (Tránh số 0 để không lỗi chia khi tính Vi-ét khuyết)
+    // Hiển thị Lá chắn parabol và phương trình va chạm theo dạng ax² = mx + n
+    let aVal = currentA === 1 ? 'x²' : currentA === -1 ? '-x²' : `${currentA}x²`;
+    let intersectionEq = `${aVal} = m*x + n`;
+
+    // Sinh nghiệm x1, x2 (Tránh số 0)
     let x1, x2;
     do {
         x1 = Math.floor(Math.random() * 8) - 4;
-        if(x1 === 0) x1 = 1;
+        if (x1 === 0) x1 = 1;
         x2 = Math.floor(Math.random() * 8) - 4;
-        if(x2 === 0) x2 = 2;
+        if (x2 === 0) x2 = 2;
     } while (x1 === x2 || Math.abs(x1 - x2) < 2);
 
     let y1 = shieldParabola.evaluate({ x: x1 });
@@ -86,33 +89,40 @@ function generateLevel() {
 
     let S = x1 + x2;
     let P = x1 * x2;
-    
-    // TUNG XÚC XẮC CHỌN CHẾ ĐỘ (50% Dễ - 50% Khó)
+
+    // 50% Dễ - 50% Khó
     let isHardMode = Math.random() > 0.5;
 
     if (!isHardMode) {
-        // CHẾ ĐỘ DỄ: Cấp sẵn S và P
-        hiddenMode = 2; // Tàng hình cả 2
+        hiddenMode = 0;
         taskDesc.innerHTML = `
-            <div style="margin-bottom: 10px;">Lá chắn: <b>y = ${equationStr}</b> (Hệ số <b style="color:#fce366;">a = ${currentA}</b>)</div>
-            <div style="color: #5cfc66;">✔️ Tín hiệu DỄ (Cấp đủ):<br>Tổng <b>S = ${S}</b> | Tích <b>P = ${P}</b></div>
+            <div style="margin-bottom: 10px; font-size: 1.1rem;">Lá chắn parabol: <b>y = ${aVal}</b><br>
+            <span style="color:#aaa; font-size: 0.9rem;">Phương trình va chạm: <b>${intersectionEq}</b></span></div>
+            <div style="color: #5cfc66;">🟢 Đã khóa 2 mục tiêu (nghiệm):<br>Địch 1 ở <b>x₁ = ${x1}</b> | Địch 2 ở <b>x₂ = ${x2}</b></div>
         `;
-        pointsDisplay.innerHTML = `<div class="point-item" style="border-left-color: #5cfc66;"><b>Nhắc bài:</b> m = a*S, n = -a*P</div>`;
+        pointsDisplay.innerHTML = `
+            <div class="point-item" style="border-left-color: #5cfc66;">
+                <b>Gợi ý tư duy:</b><br>
+                1. Tổng 2 nghiệm: ${x1} + ${x2} = <b>${S}</b>.<br>
+                2. Tích hai nghiệm (x₁x₂): <b>${P}</b>.<br>
+                3. Suy ra m và n từ phương trình va chạm!
+            </div>
+        `;
     } else {
-        // CHẾ ĐỘ KHÓ: Lộ 1 điểm, chỉ cho Tích P
-        hiddenMode = 1; // Chỉ tàng hình 1 kẻ địch
+        hiddenMode = 1;
         taskDesc.innerHTML = `
-            <div style="margin-bottom: 10px;">Lá chắn: <b>y = ${equationStr}</b> (Hệ số <b style="color:#fce366;">a = ${currentA}</b>)</div>
-            <div style="color: #ff007f;">⚠️ Tín hiệu KHÓ (Bị nhiễu):<br>
-            • Địch 1 bị lộ tại hoành độ: <b>x₁ = ${x1}</b><br>
-            • Địch 2 tàng hình. Radar báo Tích: <b>P = ${P}</b></div>
+            <div style="margin-bottom: 10px; font-size: 1.1rem;">Lá chắn parabol: <b>y = ${aVal}</b><br>
+            <span style="color:#aaa; font-size: 0.9rem;">Phương trình va chạm: <b>${intersectionEq}</b></span></div>
+            <div style="color: #ff007f;">🔴 Bị nhiễu sóng (Ẩn 1 mục tiêu):<br>
+            • Lộ diện 1 kẻ địch ở: <b>x₁ = ${x1}</b><br>
+            • P đo được là: <b>${P}</b></div>
         `;
         pointsDisplay.innerHTML = `
             <div class="point-item" style="border-left-color: #ff007f;">
-                <b>Giải mã 3 bước:</b><br>
-                1. Tìm x₂ = P / x₁<br>
-                2. Tính S = x₁ + x₂<br>
-                3. Tính m = a*S, n = -a*P
+                <b>Gợi ý tư duy:</b><br>
+                1. Tìm vị trí kẻ địch 2 (x₂) từ <b>P</b>.<br>
+                2. Nhẩm tổng x₁ + x₂ và tích x₁ x₂.<br>
+                3. Suy ra m và n từ phương trình va chạm!
             </div>
         `;
     }
@@ -146,15 +156,15 @@ runBtn.addEventListener('click', () => {
     let compiledEq;
     try {
         compiledEq = math.compile(formula);
-        compiledEq.evaluate({x: 0});
-    } catch (e) { showMessage("Lỗi cú pháp toán học!", true); return; }
+        compiledEq.evaluate({ x: 0 });
+    } catch (e) { showMessage("Lỗi cú pháp toán học! Dùng dấu * để nhân (VD: 2*x)", true); return; }
 
     if (validateFunction(compiledEq)) {
         showMessage("Chính xác! Đường đạn đã khóa mục tiêu!", false);
         hiddenMode = 0; // Bắn trúng thì hiện nguyên hình kẻ địch
         startSuccessAnimation(compiledEq);
     } else {
-        showMessage("Trượt! Cẩn thận dấu âm/dương khi nhân nhé.", true);
+        showMessage("Trượt! Tính lại dấu âm dương (-, +) xem sao nhé.", true);
         drawFailedAttempt(compiledEq);
     }
 });
@@ -170,21 +180,21 @@ function startGame() {
     gameHeader.classList.remove('hidden');
     gameMain.classList.remove('hidden');
 
-    score = 0;
-    scoreEl.innerText = score;
-    timeLeft = 120;
+    level = 1;
+    scoreEl.innerText = level;
+    timeLeft = 120; // Đặt lại 120s
     updateTimeDisplay();
     isPlaying = true;
     runBtn.disabled = false;
     formulaInput.disabled = false;
-    
+
     clearInterval(timerInterval);
     timerInterval = setInterval(() => {
         timeLeft--;
         updateTimeDisplay();
         if (timeLeft <= 0) endGame();
     }, 1000);
-    
+
     generateLevel();
 }
 
@@ -193,7 +203,7 @@ function endGame() {
     isPlaying = false;
     runBtn.disabled = true;
     formulaInput.disabled = true;
-    finalScoreEl.innerText = score;
+    finalScoreEl.innerText = level;
     gameOverMenu.classList.remove('hidden');
     gameHeader.classList.add('hidden');
     gameMain.classList.add('hidden');
@@ -222,7 +232,7 @@ function renderGrid() {
     ctx.lineWidth = 2;
     ctx.beginPath(); ctx.moveTo(mapX(0), 0); ctx.lineTo(mapX(0), ch); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(0, mapY(0)); ctx.lineTo(cw, mapY(0)); ctx.stroke();
-    
+
     ctx.fillStyle = 'rgba(102, 252, 241, 0.8)';
     ctx.font = '14px Orbitron';
     for (let i = X_MIN; i <= X_MAX; i++) {
@@ -238,12 +248,12 @@ function renderParabolaShield() {
     ctx.beginPath();
     ctx.strokeStyle = 'rgba(255, 0, 127, 0.3)';
     ctx.lineWidth = 4;
-    ctx.setLineDash([10, 10]); 
-    
+    ctx.setLineDash([10, 10]);
+
     let first = true;
     for (let x = X_MIN; x <= X_MAX; x += 0.2) {
         const y = shieldParabola.evaluate({ x });
-        if (first) { ctx.moveTo(mapX(x), mapY(y)); first = false; } 
+        if (first) { ctx.moveTo(mapX(x), mapY(y)); first = false; }
         else { ctx.lineTo(mapX(x), mapY(y)); }
     }
     ctx.stroke();
@@ -252,11 +262,7 @@ function renderParabolaShield() {
 
 function renderPoints() {
     ctx.shadowBlur = 15;
-    
-    // Nếu hiddenMode = 2, không vẽ gì (Giấu hết)
-    // Nếu hiddenMode = 1, chỉ vẽ điểm đầu tiên (x1)
-    // Nếu hiddenMode = 0, vẽ tất cả
-    
+
     for (let i = 0; i < currentTargets.length; i++) {
         if (hiddenMode === 2) continue; // Giấu hoàn toàn
         if (hiddenMode === 1 && i === 1) continue; // Giấu kẻ địch thứ 2
@@ -264,10 +270,11 @@ function renderPoints() {
         const pt = currentTargets[i];
         const px = mapX(pt.x);
         const py = mapY(pt.y);
-        
-        ctx.fillStyle = (i === 0 && hiddenMode === 1) ? '#ff007f' : '#fc66fc'; // Màu đỏ cho kẻ lộ diện
+
+        // Màu đỏ cho mục tiêu bị lộ trong chế độ khó, hồng cho các chế độ khác
+        ctx.fillStyle = (i === 0 && hiddenMode === 1) ? '#ff007f' : '#fc66fc';
         ctx.shadowColor = ctx.fillStyle;
-        
+
         ctx.beginPath();
         ctx.arc(px, py, 7, 0, Math.PI * 2);
         ctx.fill();
@@ -283,10 +290,10 @@ function renderLaserHead(x, y, angle) {
     ctx.shadowColor = '#5cfc66';
     ctx.fillStyle = '#5cfc66';
     ctx.beginPath();
-    ctx.moveTo(15, 0);       
-    ctx.lineTo(-10, 6);      
-    ctx.lineTo(-5, 0);       
-    ctx.lineTo(-10, -6);     
+    ctx.moveTo(15, 0);
+    ctx.lineTo(-10, 6);
+    ctx.lineTo(-5, 0);
+    ctx.lineTo(-10, -6);
     ctx.closePath();
     ctx.fill();
     ctx.restore();
@@ -299,7 +306,7 @@ function drawFailedAttempt(compiledEq) {
         try {
             const y = compiledEq.evaluate({ x });
             tempPath.push({ x, y });
-        } catch (e) {}
+        } catch (e) { }
     }
     setTimeout(() => { tempPath = []; render(); }, 2000);
     render();
@@ -313,14 +320,14 @@ function renderFunctionPath(pointsArray, color, shadowColor, lengthLimit = point
     ctx.shadowBlur = 15;
     ctx.shadowColor = shadowColor;
     ctx.lineJoin = 'round';
-    
+
     let first = true;
     for (let i = 0; i < lengthLimit; i++) {
         const p = pointsArray[i];
         if (p.y > Y_MAX * 2 || p.y < Y_MIN * 2) { first = true; continue; }
         const px = mapX(p.x);
         const py = mapY(p.y);
-        if (first) { ctx.moveTo(px, py); first = false; } 
+        if (first) { ctx.moveTo(px, py); first = false; }
         else { ctx.lineTo(px, py); }
     }
     ctx.stroke();
@@ -330,8 +337,8 @@ function renderFunctionPath(pointsArray, color, shadowColor, lengthLimit = point
 function render() {
     ctx.clearRect(0, 0, cw, ch);
     renderGrid();
-    renderParabolaShield(); 
-    
+    renderParabolaShield();
+
     if (tempPath.length > 0) {
         renderFunctionPath(tempPath, 'rgba(252, 102, 102, 0.8)', 'rgba(252, 102, 102, 0.5)', tempPath.length);
     }
@@ -340,7 +347,7 @@ function render() {
 
     if (gameState === 'ANIMATING') {
         renderFunctionPath(currentPath, '#5cfc66', '#00ff00', carAnimationIndex);
-        
+
         if (carAnimationIndex > 0 && carAnimationIndex < currentPath.length) {
             const p = currentPath[carAnimationIndex - 1];
             let angle = 0;
@@ -368,7 +375,7 @@ function startSuccessAnimation(compiledEq) {
             if (y > Y_MIN * 3 && y < Y_MAX * 3) {
                 currentPath.push({ x, y });
             }
-        } catch (e) {}
+        } catch (e) { }
     }
 
     carAnimationIndex = 0;
@@ -388,8 +395,8 @@ function animate() {
 }
 
 function completeLevel() {
-    score += 1;
-    scoreEl.innerText = score;
+    level += 1;
+    scoreEl.innerText = level;
     scoreEl.style.transform = 'scale(1.5)';
     setTimeout(() => scoreEl.style.transform = 'scale(1)', 300);
 
