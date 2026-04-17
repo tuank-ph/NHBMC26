@@ -194,6 +194,17 @@ body.tutorial-active {
   font-size: 1.2rem;
 }
 
+h3 {
+  margin-top: 20px;
+  margin-bottom: 5px;
+  font-size: 1.4rem;
+  color: var(--accent-warm);
+}
+
+.general-information {
+  font-size: 1.2rem;
+}
+
 .subtitle,
 .instruction,
 .stage-description,
@@ -1069,6 +1080,9 @@ body.tutorial-active .drop-slot {
 .stage-intro-subtitle,
 .stage-intro-lead {
   display: none;
+  /* font-family: "Candara", "Trebuchet MS", "Segoe UI", sans-serif;
+  font-size: 1.5rem;
+  text-transform: uppercase; */
 }
 
 .tutorial-stage-banner {
